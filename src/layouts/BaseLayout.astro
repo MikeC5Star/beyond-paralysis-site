@@ -1,16 +1,16 @@
 ---
-import '../styles/global.css';
+import Header from '../components/Header.astro';
 
 interface Props {
 	title: string;
 	description?: string;
 }
 
-const { title, description = 'Beyond Paralysis' } = Astro.props;
+const { title, description = 'SCI Research Hub — Beyond Paralysis' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +18,23 @@ const { title, description = 'Beyond Paralysis' } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>{title}</title>
 	</head>
-	<body>
-		<slot />
+	<body class="bg-clinical-bg text-white min-h-dvh antialiased relative">
+		<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+			<img
+				src="/pattern.svg"
+				alt=""
+				class="absolute top-3/4 -translate-y-1/2 h-auto w-auto max-w-none" style="right: -10px;"
+			/>
+			<img
+				src="/pattern.svg"
+				alt=""
+				class="absolute top-3/4 -translate-y-1/2 h-auto w-auto max-w-none"
+				style="left: -10px; transform: translateY(-50%) scaleX(-1);"
+			/>
+		</div>
+		<div class="relative z-10">
+			<Header />
+			<slot />
+		</div>
 	</body>
 </html>

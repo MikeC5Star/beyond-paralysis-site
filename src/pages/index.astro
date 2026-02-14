@@ -1,10 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ResearchFeed from '../components/ResearchFeed.astro';
+import YouTubeSection from '../components/YouTubeSection.astro';
 ---
 
-<BaseLayout title="Beyond Paralysis">
-	<main>
-		<h1>Beyond Paralysis</h1>
-		<p>Site coming soon.</p>
+<BaseLayout title="Beyond Paralysis — SCI Research Hub">
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+		<!-- Sections A & B: Hero + Research Feed side by side -->
+		<div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+			<HeroSection />
+			<ResearchFeed />
+		</div>
+
+		<!-- Section C: Latest YouTube Videos -->
+		<YouTubeSection />
 	</main>
 </BaseLayout>

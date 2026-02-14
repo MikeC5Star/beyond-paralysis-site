@@ -1,0 +1,136 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+	const thirtyDaysAgo = new Date();
+	thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+	const news = (await getCollection('news'))
+		.filter(item => item.data.pubDate >= thirtyDaysAgo)
+		.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+	return paginate(news, { pageSize: 20 });
+};
+
+const { page } = Astro.props;
+
+function formatDate(date: Date) {
+	return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+const categoryColors: Record<string, string> = {
+	'Biomaterials & Regenerative Medicine': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+	'Biomaterials':                         'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+	'Pharmacology':                         'bg-purple-500/20 text-purple-400 border-purple-500/30',
+	'Pharmacology & Biomaterials':          'bg-purple-500/20 text-purple-400 border-purple-500/30',
+	'Neuro-inflammation':                   'bg-rose-500/20 text-rose-400 border-rose-500/30',
+	'Neuro-inflammation & Pharmacology':    'bg-rose-500/20 text-rose-400 border-rose-500/30',
+	'Rehabilitation & Assistive Technology': 'bg-sky-500/20 text-sky-400 border-sky-500/30',
+	'Robotics & Rehabilitation':            'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+	'Clinical Trial':                       'bg-amber-500/20 text-amber-400 border-amber-500/30',
+	'Neuromodulation':                      'bg-teal-500/20 text-teal-400 border-teal-500/30',
+	'Preclinical':                          'bg-violet-500/20 text-violet-400 border-violet-500/30',
+	'Gene Therapy':                         'bg-pink-500/20 text-pink-400 border-pink-500/30',
+};
+const defaultColor = 'bg-slate-500/20 text-slate-400 border-slate-500/30';
+
+function getCategoryColor(cat: string) {
+	return categoryColors[cat] ?? defaultColor;
+}
+
+const techRatingColors = [
+	'bg-green-500/20 text-green-400 border-green-500/30',
+	'bg-lime-500/20 text-lime-400 border-lime-500/30',
+	'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+	'bg-orange-500/20 text-orange-400 border-orange-500/30',
+	'bg-red-500/20 text-red-400 border-red-500/30',
+];
+
+function getTechColor(rating: number) {
+	return techRatingColors[rating - 1] ?? techRatingColors[2];
+}
+---
+
+<BaseLayout title={`Research News${page.currentPage > 1 ? ` — Page ${page.currentPage}` : ''} — Beyond Paralysis`}>
+	<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+		<div class="flex items-center justify-between mb-8">
+			<h1 class="text-3xl font-bold flex items-center gap-3">
+				<span class="inline-block w-1 h-8 rounded-full bg-clinical-accent"></span>
+				Research News
+			</h1>
+			<span class="text-sm text-slate-500">Last 30 days</span>
+		</div>
+
+		{page.data.length === 0 && (
+			<p class="text-slate-400">No news from the last 30 days.</p>
+		)}
+
+		<div class="flex flex-col gap-4">
+			{page.data.map(item => (
+				<a
+					href={item.data.sourceUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="block card-glow rounded-xl p-5 hover:border-clinical-accent/30 transition-all no-underline group"
+				>
+					<div class="flex items-center justify-between gap-3 mb-2">
+						<div class="flex flex-wrap items-center gap-1.5">
+							{item.data.category.map(cat => (
+								<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getCategoryColor(cat)}`}>
+									{cat}
+								</span>
+							))}
+							<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getTechColor(item.data.techRating)}`}>
+								Tech: {item.data.techRating}/5
+							</span>
+						</div>
+						<span class="text-xs text-slate-500 whitespace-nowrap">{formatDate(item.data.pubDate)}</span>
+					</div>
+					<h3 class="font-bold leading-snug group-hover:text-clinical-accent transition-colors">
+						{item.data.title}
+					</h3>
+					<p class="text-sm text-slate-400 mt-2 leading-relaxed">
+						{item.data.brief}
+					</p>
+				</a>
+			))}
+		</div>
+
+		<!-- Pagination -->
+		{page.lastPage > 1 && (
+			<nav class="flex items-center justify-center gap-4 mt-10">
+				{page.url.prev ? (
+					<a
+						href={page.url.prev}
+						class="inline-flex items-center gap-2 card-glow text-sm font-medium px-5 py-2.5 rounded-lg hover:border-clinical-accent/30 transition no-underline"
+					>
+						&larr; Prev
+					</a>
+				) : (
+					<span class="inline-flex items-center gap-2 bg-clinical-card border border-slate-700/30 text-slate-600 text-sm font-medium px-5 py-2.5 rounded-lg cursor-not-allowed">
+						&larr; Prev
+					</span>
+				)}
+
+				<span class="text-sm text-slate-500">
+					Page {page.currentPage} of {page.lastPage}
+				</span>
+
+				{page.url.next ? (
+					<a
+						href={page.url.next}
+						class="inline-flex items-center gap-2 card-glow text-sm font-medium px-5 py-2.5 rounded-lg hover:border-clinical-accent/30 transition no-underline"
+					>
+						Next &rarr;
+					</a>
+				) : (
+					<span class="inline-flex items-center gap-2 bg-clinical-card border border-slate-700/30 text-slate-600 text-sm font-medium px-5 py-2.5 rounded-lg cursor-not-allowed">
+						Next &rarr;
+					</span>
+				)}
+			</nav>
+		)}
+	</main>
+</BaseLayout>

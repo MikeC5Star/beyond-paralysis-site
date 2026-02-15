@@ -28,6 +28,16 @@ export default {
 						'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
 					].join(', '),
 				},
+				'.card-glow-golden': {
+					backgroundColor: '#1e293b',
+					border: '1px solid rgba(255, 193, 7, 0.3)',
+					boxShadow: [
+						'0 0 20px 0px rgba(255, 193, 7, 0.15)',
+						'0 0 50px 0px rgba(255, 193, 7, 0.10)',
+						'0 0 100px 0px rgba(255, 193, 7, 0.05)',
+						'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+					].join(', '),
+				},
 			});
 		}),
 	],

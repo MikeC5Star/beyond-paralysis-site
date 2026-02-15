@@ -17,18 +17,20 @@ function formatDate(date: Date) {
 	return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-/** Use Astro's rendered headings which match the actual id attributes in the HTML */
-const headings = renderedHeadings.filter(h => h.depth === 3);
+/** Show h2 headings in the TOC (main sections). Fall back to h3 if no h2 found. */
+const h2s = renderedHeadings.filter(h => h.depth === 2);
+const headings = h2s.length > 0 ? h2s : renderedHeadings.filter(h => h.depth === 3);
 ---
 
 <BaseLayout title={`${report.data.title} — Beyond Paralysis`} description={report.data.executiveSummary}>
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
 		<!-- PDF Download Banner -->
-		{report.data.pdfFilename && (
+		{report.data.pdfUrl && (
 			<a
-				href={`/pdfs/${report.data.pdfFilename}`}
+				href={report.data.pdfUrl}
 				target="_blank"
+				rel="noopener noreferrer"
 				class="flex items-center gap-3 card-glow rounded-xl px-5 py-3 mb-8 no-underline hover:border-clinical-accent/30 transition group max-w-4xl"
 			>
 				<svg class="w-6 h-6 text-clinical-accent shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -36,7 +38,6 @@ const headings = renderedHeadings.filter(h => h.depth === 3);
 				</svg>
 				<div>
 					<span class="text-clinical-accent font-semibold text-sm group-hover:underline">Download Source PDF</span>
-					<span class="block text-xs text-slate-500">{report.data.pdfFilename}</span>
 				</div>
 			</a>
 		)}
@@ -92,10 +93,10 @@ const headings = renderedHeadings.filter(h => h.depth === 3);
 </BaseLayout>
 
 <style is:global>
-	/* Each ### section becomes a glowing card */
-	.report-content h3 {
+	/* ===== H2 Section Headings ===== */
+	.report-content h2 {
 		color: white;
-		font-size: 1.25rem;
+		font-size: 1.5rem;
 		font-weight: 700;
 		margin: 0;
 		padding-bottom: 0.75rem;
@@ -107,26 +108,46 @@ const headings = renderedHeadings.filter(h => h.depth === 3);
 		scroll-margin-top: 6rem;
 	}
 
-	.report-content h3::before {
+	.report-content h2::before {
 		content: '';
 		display: inline-block;
-		width: 3px;
-		height: 1.25rem;
+		width: 4px;
+		height: 1.5rem;
 		border-radius: 2px;
 		background: #00e5ff;
 		flex-shrink: 0;
 	}
 
-	/* Wrap each section (h3 + its content) in a card-like visual block */
+	/* ===== H3 Sub-Section Headings ===== */
+	.report-content h3 {
+		color: white;
+		font-size: 1.125rem;
+		font-weight: 700;
+		margin: 0;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid rgba(0, 229, 255, 0.10);
+		margin-bottom: 0.75rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		scroll-margin-top: 6rem;
+	}
+
+	.report-content h3::before {
+		content: '';
+		display: inline-block;
+		width: 3px;
+		height: 1rem;
+		border-radius: 2px;
+		background: rgba(0, 229, 255, 0.5);
+		flex-shrink: 0;
+	}
+
+	/* ===== Content Layout ===== */
 	.report-content {
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
-	}
-
-	/* Section containers — created by the markdown structure */
-	.report-content > * {
-		/* Default styles for all direct children */
 	}
 
 	/* Style paragraphs */
@@ -175,7 +196,7 @@ const headings = renderedHeadings.filter(h => h.depth === 3);
 		text-decoration: underline;
 	}
 
-	/* Section cards — group h3 + following content visually */
+	/* ===== Section Cards ===== */
 	.report-content .section-card {
 		background: #1e293b;
 		border: 1px solid rgba(0, 229, 255, 0.15);
@@ -187,30 +208,69 @@ const headings = renderedHeadings.filter(h => h.depth === 3);
 			0 0 100px 0px rgba(0, 229, 255, 0.04),
 			inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 	}
+
+	/* Nested h3 cards inside h2 cards */
+	.report-content .section-card .sub-section-card {
+		background: rgba(15, 23, 42, 0.5);
+		border: 1px solid rgba(0, 229, 255, 0.08);
+		border-radius: 0.75rem;
+		padding: 1.25rem;
+	}
 </style>
 
 <script>
-	// Wrap each h3 section in a glowing card container
+	// Wrap sections in glowing card containers.
+	// h2 sections become main cards; h3 sections inside them become sub-cards.
 	document.addEventListener('DOMContentLoaded', () => {
 		const content = document.querySelector('.report-content');
 		if (!content) return;
 
 		const children = Array.from(content.children);
+		const hasH2 = children.some(c => c.tagName === 'H2');
+
 		let currentCard: HTMLDivElement | null = null;
+		let currentSubCard: HTMLDivElement | null = null;
 		const fragment = document.createDocumentFragment();
 
-		for (const child of children) {
-			if (child.tagName === 'H3') {
-				// Start a new card
-				currentCard = document.createElement('div');
-				currentCard.className = 'section-card';
-				currentCard.appendChild(child);
-				fragment.appendChild(currentCard);
-			} else if (currentCard) {
-				currentCard.appendChild(child);
-			} else {
-				// Content before first h3
-				fragment.appendChild(child);
+		if (hasH2) {
+			// H2-based structure: h2 = main card, h3 = sub-card inside
+			for (const child of children) {
+				if (child.tagName === 'H2') {
+					// Close any open sub-card
+					currentSubCard = null;
+					// Start a new main section card
+					currentCard = document.createElement('div');
+					currentCard.className = 'section-card';
+					currentCard.appendChild(child);
+					fragment.appendChild(currentCard);
+				} else if (child.tagName === 'H3' && currentCard) {
+					// Start a sub-card within the current h2 card
+					currentSubCard = document.createElement('div');
+					currentSubCard.className = 'sub-section-card';
+					currentSubCard.appendChild(child);
+					currentCard.appendChild(currentSubCard);
+				} else if (currentSubCard) {
+					currentSubCard.appendChild(child);
+				} else if (currentCard) {
+					currentCard.appendChild(child);
+				} else {
+					// Content before first h2
+					fragment.appendChild(child);
+				}
+			}
+		} else {
+			// H3-only structure (legacy Griffith/NervGen reports)
+			for (const child of children) {
+				if (child.tagName === 'H3') {
+					currentCard = document.createElement('div');
+					currentCard.className = 'section-card';
+					currentCard.appendChild(child);
+					fragment.appendChild(currentCard);
+				} else if (currentCard) {
+					currentCard.appendChild(child);
+				} else {
+					fragment.appendChild(child);
+				}
 			}
 		}
 

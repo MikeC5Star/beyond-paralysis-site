@@ -19,10 +19,9 @@ Dark mode default. Colours defined in `tailwind.config.mjs` under `theme.extend.
 - **Text:** White for body, `text-slate-400` for secondary, `text-slate-500` for dates/meta
 
 ### Card Glow Effect
-All cards use a custom `.card-glow` Tailwind component (defined in `tailwind.config.mjs`) with:
-- Multi-layered cyan box-shadow (20px, 50px, 100px spread)
-- Subtle rim-light border (`rgba(0, 229, 255, 0.15)`)
-- Inset top highlight for depth
+Two card glow components defined in `tailwind.config.mjs`:
+- **`.card-glow`** — Standard teal: multi-layered cyan box-shadow (20px, 50px, 100px spread), subtle rim-light border, inset top highlight
+- **`.card-glow-golden`** — Gold variant for "Golden Read" stories: amber box-shadow (`rgba(255, 193, 7, ...)`), gold border (`rgba(255, 193, 7, 0.3)`)
 
 ### Background Pattern
 Two mirrored copies of `public/pattern.svg` are rendered as fixed overlays in `BaseLayout.astro`:
@@ -34,15 +33,14 @@ Two mirrored copies of `public/pattern.svg` are rendered as fixed overlays in `B
 ```
 beyond-paralysis-site/
 ├── astro.config.mjs          # Site: beyondparalysis.uk, integrations: tailwind, mdx, sitemap
-├── tailwind.config.mjs       # Clinical Realism theme + card-glow component + typography plugin
+├── tailwind.config.mjs       # Clinical Realism theme + card-glow + card-glow-golden components
 ├── tsconfig.json
 ├── package.json
 │
 ├── public/
 │   ├── favicon.svg
 │   ├── pattern.svg           # Line pattern SVG used as background decoration
-│   └── pdfs/                 # Drop PDF files here for download links from reports
-│       └── Griffith University OEC Nerve Bridge plus NervGenn 291.pdf
+│   └── sc_icon.png           # Cyan spinal cord graphic for header branding
 │
 ├── src/
 │   ├── config/
@@ -53,27 +51,27 @@ beyond-paralysis-site/
 │   ├── content/
 │   │   ├── news/             # Organised by month/date folders (see below)
 │   │   │   └── feb/
-│   │   │       └── 130226/   # 5 articles from 13th Feb 2026
-│   │   └── reports/
-│   │       ├── Griffith_Uni.md   # Griffith OEC Nerve Bridge trial deep dive
-│   │       └── NervGen.md        # NervGen NVG-291 CONNECT-SCI trial deep dive
+│   │   │       ├── 130226/   # 5 articles from 13th Feb 2026
+│   │   │       └── 150226/   # 4 articles from 15th Feb 2026 (1 golden read)
+│   │   └── reports/          # 9 deep dive reports (see Reports section)
 │   │
 │   ├── layouts/
 │   │   └── BaseLayout.astro  # HTML shell, Header, dark theme, dual SVG background overlays
 │   │
 │   ├── components/
-│   │   ├── Header.astro      # Sticky nav: Home | News | Deep Dives
+│   │   ├── Header.astro      # Sticky nav with sc_icon.png, hover glow + underline animation
 │   │   ├── HeroSection.astro # Personal story YouTube video embed (gPr4XiVQHf4)
-│   │   ├── ResearchFeed.astro# Card-based sidebar feed with category badges + tech ratings
+│   │   ├── ResearchFeed.astro# Card-based sidebar feed with golden read + category badges + tech ratings
 │   │   └── YouTubeSection.astro # 4-video grid using lite-youtube-embed
 │   │
 │   └── pages/
 │       ├── index.astro       # Homepage: Hero (left) + ResearchFeed (right) + YouTube (bottom)
+│       ├── about.astro       # About Mike — under construction placeholder
 │       ├── news/
-│       │   └── [...page].astro # Paginated news with category badges + tech ratings
+│       │   └── [...page].astro # Paginated news with golden read + category badges + tech ratings
 │       └── reports/
-│           ├── index.astro   # Reports listing page
-│           └── [slug].astro  # Dynamic report page with section cards, sticky TOC, PDF download
+│           ├── index.astro   # Reports listing page with card-glow, Deep Dive + PDF Available badges
+│           └── [slug].astro  # Dynamic report page with h2/h3 section cards, sticky TOC, PDF download
 ```
 
 ## Content Collections (src/content.config.ts)
@@ -87,9 +85,12 @@ pubDate: 2026-02-13        # YYYY-MM-DD format
 brief: "Layman's summary"
 techRating: 3               # 1-5 scale (1=green, 2=lime, 3=yellow, 4=orange, 5=red)
 category: ["Neuro-inflammation", "Pharmacology"]  # Array of categories
+goldenRead: true            # Optional — marks as "Mike's Recommended Read" with gold glow
 sourceUrl: "https://..."    # Link to original research
 tags: ["Tag1", "Tag2"]      # Optional
 ```
+
+**Golden Read feature**: Stories with `goldenRead: true` get a gold glow border (`.card-glow-golden`), a "★ Golden Read" badge, gold title colour, and a hover tooltip saying "Mike's Recommended Read".
 
 **Category colour map** (used in ResearchFeed + /news/ page):
 - Biomaterials / Biomaterials & Regenerative Medicine → emerald
@@ -101,6 +102,11 @@ tags: ["Tag1", "Tag2"]      # Optional
 - Neuromodulation → teal
 - Preclinical → violet
 - Gene Therapy → pink
+- Regenerative Medicine → emerald
+- Cellular Biology → indigo
+- Neurology → fuchsia
+- Bioengineering → lime
+- Drug Delivery → orange
 
 ### Reports Collection
 Loaded via glob from `./src/content/reports`.
@@ -109,9 +115,22 @@ Loaded via glob from `./src/content/reports`.
 title: "Report Title"
 pubDate: 2026-02-13
 executiveSummary: "One-paragraph summary"
-pdfFilename: "filename.pdf"         # Optional — must match file in public/pdfs/
-youtubeUrl: "https://youtube.com/..." # Optional
+pdfUrl: "https://assets.beyondparalysis.uk/filename.pdf"  # Optional — full URL to PDF on Cloudflare R2
+youtubeUrl: "https://youtube.com/..."                      # Optional
 ```
+
+**Current reports** (9 total):
+1. Griffith_Uni.md — Griffith OEC Nerve Bridge trial
+2. NervGen.md — NervGen NVG-291 CONNECT-SCI trial
+3. Polylaminin.md — Polylaminin: A New Biomaterial for Neural Repair
+4. Miami_Project.md — The Miami Project: Schwann Cell Transplantation
+5. The_Cryo_Bridge.md — The Cryo Bridge: Temperature-Controlled Neural Repair
+6. Auto_Dysreflexia.md — Autonomic Dysreflexia: The Hidden Danger After SCI
+7. Light_Healing.md — Light Healing: Photobiomodulation for SCI
+8. Neuromodulation.md — Neuromodulation: Electrical Stimulation for Recovery
+9. SCI_2024_2026_Therapies.md — The Pivot Point: 2025-2026 SCI Research Dossier
+
+**PDF hosting**: PDFs are hosted on Cloudflare R2 at `assets.beyondparalysis.uk`. The `pdfUrl` field contains the full URL (spaces encoded as `%20`). No local PDF storage — `public/pdfs/` has been removed.
 
 ## News File Organisation
 Files are stored in date-based folders for easy management:
@@ -124,7 +143,11 @@ src/content/news/
 │   │   ├── upper-limb-splinting.md
 │   │   ├── robotic-exoskeleton.md
 │   │   └── ipa-astrocyte-inflammation.md
-│   └── 140226/     # Tomorrow's articles go here
+│   └── 150226/
+│       ├── paralysis-treatment-organoids.md  (goldenRead: true)
+│       ├── hidden-brain-cells-spinal-repair.md
+│       ├── elezanumab-cervical-sci.md
+│       └── hydrogel-exosome-spinal-repair.md
 ├── mar/
 │   └── 010326/
 └── april/
@@ -134,30 +157,54 @@ The glob loader picks up all nested `.md` files automatically — folder structu
 
 ## Key Features & Behaviours
 
+### Header & Navigation
+- **Spinal cord icon** (`sc_icon.png`) displayed next to "Beyond Paralysis" title
+- **Nav links**: Home, Deep Dives, Research Feed, About Mike — right-aligned, `text-base` size
+- **Active page detection**: `Astro.url.pathname` comparison highlights current page with teal colour
+- **Hover effects**: Teal text-shadow glow + animated `::after` underline that expands to 60% width
+- Sticky header with backdrop blur
+
 ### Homepage
 - **Hero Section** (left): Personal story YouTube video embed (video ID: `gPr4XiVQHf4`)
-- **Research Feed** (right sidebar, 380px): Card-based news feed with category colour badges, tech rating indicators (green-to-red scale), max 20 items from last 30 days, custom teal scrollbar
+- **Research Feed** (right sidebar, 380px): Card-based news feed with golden read support, category colour badges, tech rating indicators (green-to-red scale), max 20 items from last 30 days, custom teal scrollbar
 - **YouTube Section** (bottom): 4-video grid from `src/config/youtube.ts`
 
 ### News Page (/news/)
 - Full paginated view of last 30 days of news (20 per page)
-- Same card styling as homepage feed with category badges + tech ratings
+- Same card styling as homepage feed with golden read + category badges + tech ratings
+- Golden read stories get gold glow, "★ Golden Read" badge, and hover tooltip
 - Astro generates `/news/`, `/news/2/`, `/news/3/` etc. statically — zero JS
 - Prev/Next pagination controls with disabled states
 
 ### Report Pages (/reports/[slug])
-- **PDF download banner** at top (card-glow styled) if `pdfFilename` is set
+- **PDF download banner** at top (card-glow styled) if `pdfUrl` is set — links directly to R2 URL
 - **Header** with date, "Deep Dive" label, title, and executive summary (italic with teal left border)
-- **Section cards**: Client-side JS wraps each `h3` + following content into `.section-card` divs with glow effect
-- **Sticky TOC sidebar** ("On This Page") using Astro's `render()` headings for accurate anchor links
+- **Dual heading structure**:
+  - **H2-based reports** (newer): h2 = main section cards with glow, h3 = nested sub-cards inside
+  - **H3-only reports** (legacy Griffith/NervGen): h3 = main section cards
+  - Client-side JS detects which structure to use and wraps accordingly
+- **Sticky TOC sidebar** ("On This Page") — shows h2 headings, falls back to h3 if no h2 found
+- **H2 styling**: 1.5rem, 4px teal bar, bottom border
+- **H3 styling**: 1.125rem, 3px softer teal bar, thinner bottom border
 - **Custom CSS** for report content: teal heading bars, teal list markers, styled links, bold text in white
 - Back link to `/reports`
 
+### Reports Listing Page (/reports/)
+- Card-glow styled report cards with hover effects
+- "Deep Dive" badge on every report
+- "PDF Available" badge (emerald) shown when `pdfUrl` is set
+- Date display, executive summary preview (3-line clamp)
+
+### About Page (/about)
+- Under construction placeholder with card-glow container
+- Spinal cord icon, "Under Construction" badge
+- Back to Home link
+
 ### Styling Details
-- All cards site-wide use the `.card-glow` component class
+- All cards site-wide use `.card-glow` (or `.card-glow-golden` for golden reads)
 - Report section cards get additional styling via `.section-card` class
-- `h3` headings in reports have a `::before` teal bar and bottom border
-- TOC uses `renderedHeadings` from `await render(report)` with `h.slug` for accurate anchor links (not custom regex IDs)
+- Sub-section cards use `.sub-section-card` for nested h3 content inside h2 cards
+- TOC uses `renderedHeadings` from `await render(report)` with `h.slug` for accurate anchor links
 
 ## YouTube Config (src/config/youtube.ts)
 ```ts
@@ -181,8 +228,7 @@ Update this file to change which videos appear on the homepage.
 - News archive viewer (for articles older than 30 days)
 - Auto-fetch YouTube videos (currently manual IDs)
 - Mobile hamburger menu (nav links are there but no responsive menu toggle)
-- Any branding/logo beyond the text "Beyond Paralysis"
-- About page or any other pages beyond Home, News, Deep Dives
+- About page content (currently placeholder)
 
 ## Commands
 ```bash
@@ -193,3 +239,4 @@ npm run preview   # Preview production build locally
 
 ## Deployment
 Push to `main` on GitHub → Cloudflare Pages auto-deploys. No manual steps needed.
+PDFs are hosted separately on Cloudflare R2 at `assets.beyondparalysis.uk`.

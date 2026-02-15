@@ -13,7 +13,10 @@ function formatDate(date: Date) {
 
 <BaseLayout title="Deep Dives — Beyond Paralysis">
 	<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-		<h1 class="text-3xl font-bold mb-8">Deep Dive Reports</h1>
+		<h1 class="text-3xl font-bold mb-8 flex items-center gap-3">
+			<span class="inline-block w-1 h-8 rounded-full bg-clinical-accent"></span>
+			Deep Dive Reports
+		</h1>
 
 		{reports.length === 0 && (
 			<p class="text-slate-400">No reports yet. Drop <code>.md</code> files into <code>src/content/reports/</code> to publish.</p>
@@ -21,10 +24,16 @@ function formatDate(date: Date) {
 
 		<div class="flex flex-col gap-4">
 			{reports.map(report => (
-				<a href={`/reports/${report.id}`} class="block bg-clinical-card rounded-xl p-6 border border-slate-700/50 hover:border-clinical-accent/40 transition no-underline group">
-					<span class="text-xs text-slate-500">{formatDate(report.data.pubDate)}</span>
-					<h2 class="text-xl font-semibold mt-1 group-hover:text-clinical-accent transition-colors">{report.data.title}</h2>
-					<p class="text-slate-400 text-sm mt-2 leading-relaxed">{report.data.executiveSummary}</p>
+				<a href={`/reports/${report.id}`} class="block card-glow rounded-xl p-6 hover:border-clinical-accent/30 transition-all no-underline group">
+					<div class="flex items-center gap-3 mb-2">
+						<span class="text-xs text-slate-500">{formatDate(report.data.pubDate)}</span>
+						<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-clinical-accent/10 text-clinical-accent border-clinical-accent/20">Deep Dive</span>
+						{report.data.pdfUrl && (
+							<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">PDF Available</span>
+						)}
+					</div>
+					<h2 class="text-xl font-semibold group-hover:text-clinical-accent transition-colors">{report.data.title}</h2>
+					<p class="text-slate-400 text-sm mt-2 leading-relaxed line-clamp-3">{report.data.executiveSummary}</p>
 				</a>
 			))}
 		</div>

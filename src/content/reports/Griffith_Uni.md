@@ -1,7 +1,7 @@
 ---
 title: 'Griffith University OEC "3D Nerve Bridge" Trial'
 pubDate: 2026-02-13
-pdfFilename: "Griffith University OEC Nerve Bridge plus NervGenn 291.pdf"
+pdfUrl: "https://assets.beyondparalysis.uk/Griffith%20University%20OEC%20Nerve%20Bridge%20plus%20NervGenn%20291.pdf"
 executiveSummary: "A world-first Phase I/IIa clinical trial by Griffith University implanting patients' own olfactory ensheathing cells (OECs) inside a 3D scaffold to repair chronic spinal cord injuries, combined with intensive rehabilitation."
 ---
 

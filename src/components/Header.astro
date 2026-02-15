@@ -1,21 +1,33 @@
 ---
 const navLinks = [
 	{ href: '/', label: 'Home' },
-	{ href: '/news', label: 'News' },
 	{ href: '/reports', label: 'Deep Dives' },
+	{ href: '/news', label: 'Research Feed' },
+	{ href: '/about', label: 'About Mike' },
 ];
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string) {
+	if (href === '/') return currentPath === '/';
+	return currentPath.startsWith(href);
+}
 ---
 
 <header class="border-b border-slate-700/50 bg-clinical-bg/80 backdrop-blur-md sticky top-0 z-50">
-	<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-		<a href="/" class="flex items-center gap-2 no-underline">
-			<span class="text-clinical-accent font-bold text-xl tracking-tight">Beyond Paralysis</span>
+	<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-8">
+		<!-- Logo + Title -->
+		<a href="/" class="flex items-center gap-3 no-underline shrink-0">
+			<img src="/sc_icon.png" alt="" class="h-9 w-auto" />
+			<span class="text-white font-bold text-xl tracking-tight">Beyond Paralysis</span>
 		</a>
-		<div class="flex items-center gap-6">
+
+		<!-- Nav Links — centered -->
+		<div class="flex items-center gap-1 ml-auto">
 			{navLinks.map(link => (
 				<a
 					href={link.href}
-					class="text-sm text-slate-300 hover:text-clinical-accent transition-colors no-underline"
+					class={`nav-link text-base font-medium px-4 py-4 relative no-underline transition-colors ${isActive(link.href) ? 'text-clinical-accent active' : 'text-slate-300'}`}
 				>
 					{link.label}
 				</a>
@@ -23,3 +35,38 @@ const navLinks = [
 		</div>
 	</nav>
 </header>
+
+<style>
+	.nav-link {
+		position: relative;
+	}
+
+	/* Bottom accent line */
+	.nav-link::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0;
+		height: 2px;
+		background: #00e5ff;
+		border-radius: 1px;
+		transition: width 0.25s ease;
+	}
+
+	.nav-link:hover::after,
+	.nav-link.active::after {
+		width: 60%;
+	}
+
+	/* Hover glow */
+	.nav-link:hover {
+		color: #00e5ff;
+		text-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+	}
+
+	.nav-link.active {
+		text-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+	}
+</style>

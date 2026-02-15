@@ -16,6 +16,7 @@ const news = (await getCollection('news'))
 const categoryColors: Record<string, string> = {
 	'Biomaterials & Regenerative Medicine': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
 	'Biomaterials':                         'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+	'Regenerative Medicine':                'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
 	'Pharmacology':                         'bg-purple-500/20 text-purple-400 border-purple-500/30',
 	'Pharmacology & Biomaterials':          'bg-purple-500/20 text-purple-400 border-purple-500/30',
 	'Neuro-inflammation':                   'bg-rose-500/20 text-rose-400 border-rose-500/30',
@@ -26,6 +27,10 @@ const categoryColors: Record<string, string> = {
 	'Neuromodulation':                      'bg-teal-500/20 text-teal-400 border-teal-500/30',
 	'Preclinical':                          'bg-violet-500/20 text-violet-400 border-violet-500/30',
 	'Gene Therapy':                         'bg-pink-500/20 text-pink-400 border-pink-500/30',
+	'Cellular Biology':                     'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
+	'Neurology':                            'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30',
+	'Bioengineering':                       'bg-lime-500/20 text-lime-400 border-lime-500/30',
+	'Drug Delivery':                        'bg-orange-500/20 text-orange-400 border-orange-500/30',
 };
 const defaultColor = 'bg-slate-500/20 text-slate-400 border-slate-500/30';
 
@@ -62,9 +67,17 @@ function getTechColor(rating: number) {
 				href={item.data.sourceUrl}
 				target="_blank"
 				rel="noopener noreferrer"
-				class="block card-glow rounded-xl p-4 hover:border-clinical-accent/30 transition-all no-underline group"
+				class={`block rounded-xl p-4 hover:border-clinical-accent/30 transition-all no-underline group relative ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}
 			>
+				{item.data.goldenRead && (
+					<span class="golden-tooltip">Mike's Recommended Read</span>
+				)}
 				<div class="flex flex-wrap items-center gap-1.5 mb-2">
+					{item.data.goldenRead && (
+						<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+							★ Golden Read
+						</span>
+					)}
 					{item.data.category.map(cat => (
 						<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getCategoryColor(cat)}`}>
 							{cat}
@@ -74,7 +87,7 @@ function getTechColor(rating: number) {
 						Tech: {item.data.techRating}/5
 					</span>
 				</div>
-				<h3 class="text-sm font-bold leading-snug group-hover:text-clinical-accent transition-colors">
+				<h3 class={`text-sm font-bold leading-snug transition-colors ${item.data.goldenRead ? 'text-yellow-300 group-hover:text-yellow-200' : 'group-hover:text-clinical-accent'}`}>
 					{item.data.title}
 				</h3>
 				<p class="text-xs text-slate-400 mt-1.5 leading-relaxed line-clamp-3">
@@ -108,5 +121,38 @@ function getTechColor(rating: number) {
 	.feed-scroll {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(0, 229, 255, 0.3) transparent;
+	}
+
+	.golden-read {
+		position: relative;
+	}
+	.golden-tooltip {
+		position: absolute;
+		top: -32px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: rgba(255, 193, 7, 0.95);
+		color: #1e293b;
+		font-size: 11px;
+		font-weight: 700;
+		padding: 4px 12px;
+		border-radius: 6px;
+		white-space: nowrap;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.2s ease;
+		z-index: 10;
+	}
+	.golden-tooltip::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border: 5px solid transparent;
+		border-top-color: rgba(255, 193, 7, 0.95);
+	}
+	.golden-read:hover .golden-tooltip {
+		opacity: 1;
 	}
 </style>

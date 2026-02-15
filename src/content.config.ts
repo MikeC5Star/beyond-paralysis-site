@@ -9,6 +9,7 @@ const newsCollection = defineCollection({
     brief: z.string(),
     techRating: z.number().min(1).max(5),
     category: z.array(z.string()),
+    goldenRead: z.boolean().optional().default(false),
     sourceUrl: z.string().url(),
     tags: z.array(z.string()).optional(),
   }),
@@ -20,7 +21,7 @@ const reportsCollection = defineCollection({
     title: z.string(),
     pubDate: z.date(),
     youtubeUrl: z.string().url().optional(),
-    pdfFilename: z.string().optional(),
+    pdfUrl: z.string().url().optional(),
     executiveSummary: z.string(),
   }),
 });

@@ -62,12 +62,12 @@ function getTechColor(rating: number) {
 }
 ---
 
-<BaseLayout title={`Research News${page.currentPage > 1 ? ` — Page ${page.currentPage}` : ''} — Beyond Paralysis`}>
+<BaseLayout title={`Research in the News${page.currentPage > 1 ? ` — Page ${page.currentPage}` : ''} — Beyond Paralysis`}>
 	<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 		<div class="flex items-center justify-between mb-8">
 			<h1 class="text-3xl font-bold flex items-center gap-3">
 				<span class="inline-block w-1 h-8 rounded-full bg-clinical-accent"></span>
-				Research News
+				Research in the News
 			</h1>
 			<span class="text-sm text-slate-500">Last 30 days</span>
 		</div>
@@ -78,11 +78,8 @@ function getTechColor(rating: number) {
 
 		<div class="flex flex-col gap-4">
 			{page.data.map(item => (
-				<a
-					href={item.data.sourceUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					class={`block rounded-xl p-5 hover:border-clinical-accent/30 transition-all no-underline group relative ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}
+				<div
+					class={`block rounded-xl p-5 transition-all relative ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}
 				>
 					{item.data.goldenRead && (
 						<span class="golden-tooltip">Mike's Recommended Read</span>
@@ -105,13 +102,23 @@ function getTechColor(rating: number) {
 						</div>
 						<span class="text-xs text-slate-500 whitespace-nowrap">{formatDate(item.data.pubDate)}</span>
 					</div>
-					<h3 class={`font-bold leading-snug transition-colors ${item.data.goldenRead ? 'text-yellow-300 group-hover:text-yellow-200' : 'group-hover:text-clinical-accent'}`}>
+					<h3 class={`font-bold leading-snug ${item.data.goldenRead ? 'text-yellow-300' : 'text-white'}`}>
 						{item.data.title}
 					</h3>
 					<p class="text-sm text-slate-400 mt-2 leading-relaxed">
 						{item.data.brief}
 					</p>
-				</a>
+					{item.data.sourceUrl && (
+						<a
+							href={item.data.sourceUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-block mt-3 text-xs text-clinical-accent hover:underline no-underline"
+						>
+							Read full article &rarr; <span class="text-red-400">(warning: takes you to external news page)</span>
+						</a>
+					)}
+				</div>
 			))}
 		</div>
 

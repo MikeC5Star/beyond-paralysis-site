@@ -55,7 +55,71 @@ function getTechColor(rating: number) {
 }
 ---
 
-<aside class="flex flex-col gap-1 h-full">
+<!-- ===== MOBILE VERSION (below sm) ===== -->
+<div class="sm:hidden flex flex-col items-center">
+	<!-- Title -->
+	<h2 class="text-lg font-bold mb-1 flex items-center gap-2">
+		<span class="inline-block w-1 h-6 rounded-full bg-clinical-accent"></span>
+		Daily Research News
+	</h2>
+	<p class="text-xs text-slate-400 mb-4">
+		All research news: <a href="/news" class="text-clinical-accent hover:underline no-underline">here</a>
+	</p>
+
+	{news.length === 0 && (
+		<p class="text-slate-400 text-sm">No news entries yet.</p>
+	)}
+
+	{news.length > 0 && (
+		<div class="w-[80%] rounded-xl border border-slate-600/50 bg-clinical-card/40 backdrop-blur-sm p-3 news-container overflow-y-auto feed-scroll" id="mobile-news-container">
+			<div class="flex flex-col gap-2" id="mobile-news-list">
+				{news.map((item, idx) => (
+					<div
+						class={`news-card rounded-xl p-3 cursor-pointer transition-all duration-200 ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}
+						data-index={idx}
+					>
+						<div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+							{item.data.goldenRead && (
+								<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+									★ Golden Read
+								</span>
+							)}
+							{item.data.category.map(cat => (
+								<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getCategoryColor(cat)}`}>
+									{cat}
+								</span>
+							))}
+							<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getTechColor(item.data.techRating)}`}>
+								Tech: {item.data.techRating}/5
+							</span>
+						</div>
+						<h3 class={`text-sm font-bold leading-snug ${item.data.goldenRead ? 'text-yellow-300' : 'text-white'}`}>
+							{item.data.title}
+						</h3>
+						<div class="news-card-brief hidden mt-2">
+							<p class="text-xs text-slate-400 leading-relaxed">
+								{item.data.brief}
+							</p>
+							{item.data.sourceUrl && (
+								<a
+									href={item.data.sourceUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="source-link inline-block mt-2 text-[11px] text-clinical-accent hover:underline no-underline"
+								>
+									Read full article &rarr; <span class="text-red-400">(warning: takes you to external news page)</span>
+								</a>
+							)}
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+	)}
+</div>
+
+<!-- ===== DESKTOP VERSION (sm and up) — unchanged ===== -->
+<aside class="hidden sm:flex flex-col gap-1 h-full">
 	<h2 class="text-lg font-bold mb-3 flex items-center gap-2">
 		<span class="inline-block w-1 h-6 rounded-full bg-clinical-accent"></span>
 		Live Research Alerts
@@ -159,4 +223,60 @@ function getTechColor(rating: number) {
 	.golden-read:hover .golden-tooltip {
 		opacity: 1;
 	}
+
+	/* Mobile news card expanded state */
+	.news-card.expanded {
+		border-color: rgba(0, 229, 255, 0.3);
+	}
+
+	.news-card.expanded .news-card-brief {
+		display: block;
+	}
 </style>
+
+<script>
+	function initMobileNewsFeed() {
+		const container = document.getElementById('mobile-news-container');
+		const cards = document.querySelectorAll('.news-card');
+		if (!container || cards.length === 0) return;
+
+		// Calculate container height: 5 collapsed cards + gaps
+		// Measure first card's collapsed height
+		const firstCard = cards[0] as HTMLElement;
+		const cardHeight = firstCard.offsetHeight;
+		const gap = 8; // gap-2 = 0.5rem = 8px
+		const containerPadding = 24; // p-3 = 12px * 2
+		const containerHeight = (cardHeight * 5) + (gap * 4) + containerPadding;
+		container.style.maxHeight = containerHeight + 'px';
+
+		// Stop source links from triggering accordion
+		container.querySelectorAll('.source-link').forEach(link => {
+			link.addEventListener('click', (e) => e.stopPropagation());
+		});
+
+		// Accordion behaviour
+		cards.forEach(card => {
+			card.addEventListener('click', (e) => {
+				const target = e.target as HTMLElement;
+				// Don't toggle if clicking a link inside
+				if (target.tagName === 'A' || target.closest('a')) return;
+
+				const isExpanded = card.classList.contains('expanded');
+
+				// Close all cards
+				cards.forEach(c => c.classList.remove('expanded'));
+
+				// Open clicked card if it was closed
+				if (!isExpanded) {
+					card.classList.add('expanded');
+					// Scroll the opened card into view within the container
+					(card as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+				}
+			});
+		});
+	}
+
+	// Run on initial load and on Astro page transitions
+	initMobileNewsFeed();
+	document.addEventListener('astro:after-swap', initMobileNewsFeed);
+</script>

@@ -60,16 +60,16 @@ beyond-paralysis-site/
 │   │   └── BaseLayout.astro  # HTML shell, Header, dark theme, dual SVG background overlays
 │   │
 │   ├── components/
-│   │   ├── Header.astro      # Sticky nav with sc_icon.png (72px, offset 10px), hover glow + underline, text-4xl title
+│   │   ├── Header.astro      # Dual-layout header: mobile (icon+title centered, sidebar nav) + desktop (inline nav)
 │   │   ├── HeroSection.astro # Featured video: "Is Paralysis Recovery on the Horizon?" (4SfBB5jq-0k)
-│   │   ├── ResearchFeed.astro# Card-based sidebar feed with golden read + category badges + tech ratings
+│   │   ├── ResearchFeed.astro# Dual-layout: mobile accordion feed + desktop sidebar feed
 │   │   └── YouTubeSection.astro # 4-video grid using lite-youtube-embed
 │   │
 │   └── pages/
 │       ├── index.astro       # Homepage: Hero (left) + ResearchFeed (right) + YouTube (bottom)
 │       ├── about.astro       # About Mike — personal story text + "My Story" YouTube video (gPr4XiVQHf4)
 │       ├── news/
-│       │   └── [...page].astro # Paginated news with golden read + category badges + tech ratings
+│       │   └── [...page].astro # Paginated news — "Research in the News" title, non-clickable cards with explicit external links
 │       └── reports/
 │           ├── index.astro   # Reports listing page with card-glow, Deep Dive + PDF Available badges
 │           └── [slug].astro  # Dynamic report page with h2/h3 section cards, sticky TOC, PDF download
@@ -170,20 +170,23 @@ The glob loader picks up all nested `.md` files automatically — folder structu
 ## Key Features & Behaviours
 
 ### Header & Navigation
-- **Spinal cord icon** (`sc_icon.png`) displayed next to "Beyond Paralysis" title
-- **Nav links**: Home, Deep Dives, Research Feed, About Mike — right-aligned, `text-base` size
+- **Desktop (sm+):** Spinal cord icon (`sc_icon.png`, 72px, offset 10px) + "Beyond Paralysis" title (`text-4xl`) + inline nav links (Home, Deep Dives, All News, About Mike) right-aligned with hover glow + animated underline
+- **Mobile (below sm):** Icon pinned left + "Beyond Paralysis" title centered (`text-[2.19rem]`), nav links hidden from header
+- **Mobile sidebar nav:** Sliding panel from left edge with hamburger (☰) / X (✕) toggle button. Fixed position, scrolls with page. Nav links listed vertically with active page teal highlight. `clinical-card` background, backdrop blur, teal glow shadow.
 - **Active page detection**: `Astro.url.pathname` comparison highlights current page with teal colour
-- **Hover effects**: Teal text-shadow glow + animated `::after` underline that expands to 60% width
 - Sticky header with backdrop blur
 
 ### Homepage
 - **Hero Section** (left): Featured video "Is Paralysis Recovery on the Horizon?" (video ID: `4SfBB5jq-0k`)
-- **Research Feed** (right sidebar, 380px): Card-based news feed with golden read support, category colour badges, tech rating indicators (green-to-red scale), max 20 items from last 30 days, custom teal scrollbar
+- **Research Feed** (right sidebar on desktop, full-width on mobile):
+  - **Desktop:** "Live Research Alerts" title, card-based scrollable feed (max-h 600px), max 20 items from last 30 days, custom teal scrollbar, cards are clickable `<a>` tags linking to external source
+  - **Mobile:** "Daily Research News" title with "All research news: here" subtitle linking to /news. 80% width centered container with visible border. Fixed height = 5 collapsed cards. Accordion behaviour: collapsed cards show tags + title only, click to expand and see brief + "Read full article →" link with red external warning. Only one card open at a time. All start collapsed.
 - **YouTube Section** (bottom): 4-video grid from `src/config/youtube.ts`
 
-### News Page (/news/)
+### News Page (/news/) — "Research in the News"
 - Full paginated view of last 30 days of news (20 per page)
-- Same card styling as homepage feed with golden read + category badges + tech ratings
+- Cards are **non-clickable** `<div>` elements (not `<a>` tags) — prevents accidental navigation to external sites
+- Each card shows: golden read badge, category colour badges, tech rating, date, title, brief, and explicit "Read full article → (warning: takes you to external news page)" link
 - Golden read stories get gold glow, "★ Golden Read" badge, and hover tooltip
 - Astro generates `/news/`, `/news/2/`, `/news/3/` etc. statically — zero JS
 - Prev/Next pagination controls with disabled states
@@ -241,10 +244,20 @@ Update this file to change which videos appear on the homepage.
 - **Content cache**: If news/reports aren't showing after adding new files, delete the `.astro/` directory and restart the dev server.
 - **YAML quoting**: If a report title contains double quotes, use single quotes for the outer YAML string (e.g., `title: 'Title with "quotes"'`).
 
+## Current Branch State
+- **`main`** — Last pushed commit: `cbf2f73` (Mobile sidebar nav, larger title, hamburger icon)
+- **`feature/mobile-research-feed`** — Active development branch with:
+  - [x] Mobile research feed: "Daily Research News" title + "All research news: here" subtitle
+  - [x] 80% width scrollable container with 5-card height
+  - [x] Accordion collapsible cards (tags+title collapsed, expand to show brief + external link warning)
+  - [x] Nav label changed: "Research Feed" → "All News"
+  - [x] News page title: "Research News" → "Research in the News"
+  - [x] News page cards: non-clickable `<div>`, explicit "Read full article" link with red external warning
+  - [ ] Test on real mobile device & merge to main
+
 ## What's NOT Built Yet
 - News archive viewer (for articles older than 30 days)
 - Auto-fetch YouTube videos (currently manual IDs)
-- Mobile hamburger menu (nav links are there but no responsive menu toggle)
 
 ## Commands
 ```bash

@@ -14,20 +14,29 @@ function isActive(href: string) {
 }
 ---
 
+<!-- Desktop header (sm+) -->
 <header class="border-b border-slate-700/50 bg-clinical-bg/80 backdrop-blur-md sticky top-0 z-50">
-	<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between">
-		<!-- Logo + Title -->
-		<a href="/" class="flex items-center gap-2 sm:gap-3 no-underline w-[45%] sm:w-auto sm:shrink-0 min-w-0">
-			<img src="/sc_icon.png" alt="" class="h-9 sm:h-[72px] w-auto shrink-0 relative top-0 sm:top-[10px]" />
-			<span class="text-white font-bold text-xl sm:text-4xl tracking-tight truncate">Beyond Paralysis</span>
+	<!-- Mobile: icon left + title centered -->
+	<div class="sm:hidden flex items-center h-16 px-4 relative">
+		<a href="/" class="flex items-center no-underline">
+			<img src="/sc_icon.png" alt="" class="h-9 w-auto" />
 		</a>
+		<a href="/" class="absolute left-1/2 -translate-x-1/2 no-underline">
+			<span class="text-white font-bold text-[2.19rem] leading-tight tracking-tight whitespace-nowrap">Beyond Paralysis</span>
+		</a>
+	</div>
 
-		<!-- Nav Links -->
-		<div class="flex items-center justify-end gap-0 sm:gap-1 w-[45%] sm:w-auto">
+	<!-- Desktop: original layout -->
+	<nav class="hidden sm:flex max-w-7xl mx-auto px-6 lg:px-8 h-20 items-center gap-8">
+		<a href="/" class="flex items-center gap-3 no-underline shrink-0">
+			<img src="/sc_icon.png" alt="" class="h-[72px] w-auto relative top-[10px]" />
+			<span class="text-white font-bold text-4xl tracking-tight">Beyond Paralysis</span>
+		</a>
+		<div class="flex items-center gap-1 ml-auto">
 			{navLinks.map(link => (
 				<a
 					href={link.href}
-					class={`nav-link text-xs sm:text-base font-medium px-2 sm:px-4 py-4 relative no-underline transition-colors ${isActive(link.href) ? 'text-clinical-accent active' : 'text-slate-300'}`}
+					class={`nav-link text-base font-medium px-4 py-4 relative no-underline transition-colors ${isActive(link.href) ? 'text-clinical-accent active' : 'text-slate-300'}`}
 				>
 					{link.label}
 				</a>
@@ -35,6 +44,39 @@ function isActive(href: string) {
 		</div>
 	</nav>
 </header>
+
+<!-- Mobile sidebar nav (sm:hidden) -->
+<div id="mobile-sidebar" class="sm:hidden fixed top-0 left-0 h-full z-[100] flex flex-row-reverse transition-transform duration-300 -translate-x-[calc(100%-2rem)]">
+	<!-- Toggle button -->
+	<button
+		id="sidebar-toggle"
+		class="w-8 h-14 flex items-center justify-center self-start mt-16 bg-clinical-card/95 border border-slate-600/50 border-l-0 rounded-r-lg backdrop-blur-md cursor-pointer"
+		aria-label="Toggle navigation menu"
+	>
+		<span id="sidebar-icon-open" class="text-clinical-accent text-xl leading-none">&#9776;</span>
+		<span id="sidebar-icon-close" class="text-clinical-accent text-xl leading-none hidden">&#10005;</span>
+	</button>
+
+	<!-- Sidebar panel -->
+	<div class="w-56 h-full bg-clinical-card/95 backdrop-blur-md border-r border-slate-600/50 flex flex-col pt-16 shadow-[4px_0_24px_rgba(0,229,255,0.08)]">
+		<div class="px-5 pb-4 mb-2 border-b border-slate-700/50">
+			<span class="text-clinical-accent text-xs font-semibold uppercase tracking-widest">Navigation</span>
+		</div>
+		{navLinks.map(link => (
+			<a
+				href={link.href}
+				class={`sidebar-link flex items-center gap-3 px-5 py-3.5 text-base font-medium no-underline transition-all duration-200 ${isActive(link.href) ? 'text-clinical-accent bg-clinical-accent/10 border-l-2 border-clinical-accent' : 'text-slate-300'}`}
+			>
+				{link.label}
+			</a>
+		))}
+
+		<!-- Decorative bottom accent -->
+		<div class="mt-auto px-5 py-4 border-t border-slate-700/50">
+			<div class="h-0.5 w-12 bg-gradient-to-r from-clinical-accent/60 to-transparent rounded-full"></div>
+		</div>
+	</div>
+</div>
 
 <style>
 	.nav-link {
@@ -69,4 +111,40 @@ function isActive(href: string) {
 	.nav-link.active {
 		text-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
 	}
+
+	/* Sidebar link hover */
+	.sidebar-link:hover {
+		color: #00e5ff;
+		background: rgba(0, 229, 255, 0.08);
+		text-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+	}
+
+	/* Sidebar open state */
+	#mobile-sidebar.open {
+		transform: translateX(0);
+	}
+
+	#mobile-sidebar.open #sidebar-icon-open {
+		display: none;
+	}
+
+	#mobile-sidebar.open #sidebar-icon-close {
+		display: block;
+	}
 </style>
+
+<script>
+	const sidebar = document.getElementById('mobile-sidebar');
+	const toggle = document.getElementById('sidebar-toggle');
+
+	toggle?.addEventListener('click', () => {
+		sidebar?.classList.toggle('open');
+	});
+
+	// Close sidebar when clicking a link
+	sidebar?.querySelectorAll('.sidebar-link').forEach(link => {
+		link.addEventListener('click', () => {
+			sidebar.classList.remove('open');
+		});
+	});
+</script>

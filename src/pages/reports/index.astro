@@ -31,7 +31,7 @@ function getYouTubeId(url: string): string | null {
 			{reports.map(report => {
 				const videoId = report.data.youtubeUrl ? getYouTubeId(report.data.youtubeUrl) : null;
 				return (
-					<div class="grid grid-cols-[1fr_25%] gap-4 items-stretch">
+					<div class="grid grid-cols-1 sm:grid-cols-[1fr_25%] gap-4 items-stretch">
 						<!-- Report Card -->
 						<a href={`/reports/${report.id}`} class="block card-glow rounded-xl p-6 hover:border-clinical-accent/30 transition-all no-underline group">
 							<div class="flex items-center gap-3 mb-2">
@@ -49,7 +49,7 @@ function getYouTubeId(url: string): string | null {
 						</a>
 
 						<!-- Video Column -->
-						<div class="flex items-center justify-center">
+						<div class={`flex items-center justify-center ${!videoId ? 'hidden sm:flex' : ''}`}>
 							{videoId ? (
 								<a href={report.data.youtubeUrl} target="_blank" rel="noopener noreferrer" class="video-thumb block rounded-xl overflow-hidden border border-slate-700/50 hover:border-clinical-accent/40 transition-all w-full aspect-video relative group/vid">
 									<img

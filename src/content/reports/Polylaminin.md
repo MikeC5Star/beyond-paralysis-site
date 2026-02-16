@@ -2,6 +2,7 @@
 title: "The Brazilian Bridge: How Polylaminin is Rewiring Spinal Cord Repair"
 pubDate: 2026-02-15
 pdfUrl: "https://assets.beyondparalysis.uk/UFRJ%20Polylaminin%20Regenerative%20drug.pdf"
+youtubeUrl: "https://youtu.be/GzQmaBCJVcs"
 executiveSummary: "A landmark biological breakthrough from Brazil utilizing a specialized protein mesh derived from human placentas to physically bridge spinal cord injury gaps. With a 75% motor recovery rate in academic pilots, this therapy has officially moved into formal Phase 1 clinical trials as of January 2026."
 ---
 

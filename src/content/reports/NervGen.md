@@ -2,6 +2,7 @@
 title: "NervGen NVG-291: CONNECT-SCI Trial Breakdown"
 pubDate: 2026-02-13
 pdfUrl: "https://assets.beyondparalysis.uk/Griffith%20University%20OEC%20Nerve%20Bridge%20plus%20NervGenn%20291.pdf"
+youtubeUrl: "https://youtu.be/Yxax9XBNbBo"
 executiveSummary: "NervGen's NVG-291 is a first-in-class peptide drug targeting the PTPσ pathway. Recent Phase 1b trial results show unprecedented pharmacological improvements in motor connectivity for chronic SCI patients."
 ---
 

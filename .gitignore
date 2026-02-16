@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Claude Code local settings
+.claude/
+
+# unused assets
+public/icons.png

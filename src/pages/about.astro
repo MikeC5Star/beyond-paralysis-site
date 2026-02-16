@@ -1,21 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { YouTube } from 'astro-embed';
 ---
 
 <BaseLayout title="About Mike — Beyond Paralysis">
-	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
 		<div class="card-glow rounded-2xl p-10 sm:p-14">
-			<img src="/sc_icon.png" alt="" class="h-16 w-auto mx-auto mb-6 opacity-60" />
-			<h1 class="text-3xl sm:text-4xl font-bold mb-4">About Mike</h1>
-			<div class="inline-block px-4 py-1.5 rounded-full border border-clinical-accent/30 bg-clinical-accent/10 text-clinical-accent text-sm font-semibold mb-6">
-				Under Construction
+			<div class="text-center mb-8">
+				<img src="/sc_icon.png" alt="" class="h-16 w-auto mx-auto mb-6 opacity-60" />
+				<h1 class="text-3xl sm:text-4xl font-bold mb-4">About Mike</h1>
 			</div>
-			<p class="text-slate-400 text-lg leading-relaxed max-w-xl mx-auto">
-				This page is coming soon. It will tell the story behind Beyond Paralysis — the personal journey, the mission, and why this research matters.
+
+			<p class="text-slate-300 text-lg leading-relaxed mb-8">
+				After 24 years of living with a C4-5 complete spinal cord injury (2023), I took the risk of getting the 'latest' & [as far as I'm aware] only commercially available treatment that has the possibility of 'restoring' some of my long lost function. I flew from the UK to Bangkok for epidural stimulation treatment, injection of stem cells & intensive rehabilitation. It was one hell of a journey! Check out the video for the full story…
 			</p>
-			<a href="/" class="inline-block mt-8 text-sm text-clinical-accent hover:underline no-underline">
-				&larr; Back to Home
-			</a>
+
+			<div class="rounded-xl overflow-hidden mb-6">
+				<YouTube id="gPr4XiVQHf4" />
+			</div>
+
+			<div class="text-center">
+				<a href="/" class="inline-block mt-4 text-sm text-clinical-accent hover:underline no-underline">
+					&larr; Back to Home
+				</a>
+			</div>
 		</div>
 	</main>
 </BaseLayout>

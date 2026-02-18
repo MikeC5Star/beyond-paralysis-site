@@ -39,6 +39,7 @@ beyond-paralysis-site/
 │
 ├── public/
 │   ├── favicon.svg
+│   ├── channel-banner.jpg    # YouTube channel banner image (clickable link to channel)
 │   ├── pattern.svg           # Line pattern SVG used as background decoration
 │   └── sc_icon.png           # Cyan spinal cord graphic for header branding
 │
@@ -63,7 +64,7 @@ beyond-paralysis-site/
 │   │   ├── Header.astro      # Dual-layout header: mobile (icon+title centered, sidebar nav) + desktop (inline nav)
 │   │   ├── HeroSection.astro # Featured video: "Is Paralysis Recovery on the Horizon?" (4SfBB5jq-0k)
 │   │   ├── ResearchFeed.astro# Dual-layout: mobile accordion feed + desktop sidebar feed
-│   │   └── YouTubeSection.astro # 4-video grid using lite-youtube-embed
+│   │   └── YouTubeSection.astro # Dual-layout: mobile channel section (banner + 2x2 grid) + desktop 4-col grid
 │   │
 │   └── pages/
 │       ├── index.astro       # Homepage: Hero (left) + ResearchFeed (right) + YouTube (bottom)
@@ -160,6 +161,12 @@ src/content/news/
 │       ├── mesenchymal-stem-cell-vesicles-pain.md
 │       ├── mri-machine-learning-sci-detection.md
 │       └── tissue-bridges-walking-prediction.md
+│   └── 180226/
+│       ├── neonatal-scaffold-sci-repair.md
+│       ├── neural-relay-subdural-stimulation.md
+│       ├── scs-diabetic-neuropathy.md
+│       ├── cxcl4-fibrotic-scarring-sci.md
+│       └── depleting-neuroinflammation-chronic-sci.md
 ├── mar/
 │   └── 010326/
 └── april/
@@ -180,8 +187,10 @@ The glob loader picks up all nested `.md` files automatically — folder structu
 - **Hero Section** (left): Featured video "Is Paralysis Recovery on the Horizon?" (video ID: `4SfBB5jq-0k`)
 - **Research Feed** (right sidebar on desktop, full-width on mobile):
   - **Desktop:** "Live Research Alerts" title, card-based scrollable feed (max-h 600px), max 20 items from last 30 days, custom teal scrollbar, cards are clickable `<a>` tags linking to external source
-  - **Mobile:** "Daily Research News" title with "All research news: here" subtitle linking to /news. 80% width centered container with visible border. Fixed height = 5 collapsed cards. Accordion behaviour: collapsed cards show tags + title only, click to expand and see brief + "Read full article →" link with red external warning. Only one card open at a time. All start collapsed.
-- **YouTube Section** (bottom): 4-video grid from `src/config/youtube.ts`
+  - **Mobile:** "Daily Research News" title with "All research news: here" subtitle linking to /news. 80% width centered container with visible border. Fixed height = 2.5 collapsed cards (half-visible card signals "scroll for more"). Accordion behaviour: collapsed cards show tags + title only, click to expand and see brief + "Read full article →" link with red external warning. Only one card open at a time. All start collapsed.
+- **YouTube Section** (bottom):
+  - **Desktop:** "Latest Videos" title, 4-video grid (2-col on sm, 4-col on lg) from `src/config/youtube.ts`
+  - **Mobile:** "Mike's Channel & Latest Videos" title, 90% width centered. Channel banner image (`channel-banner.jpg`) with teal glow + rounded corners, clickable link to YouTube channel. 2x2 video grid below.
 
 ### News Page (/news/) — "Research in the News"
 - Full paginated view of last 30 days of news (20 per page)
@@ -245,15 +254,17 @@ Update this file to change which videos appear on the homepage.
 - **YAML quoting**: If a report title contains double quotes, use single quotes for the outer YAML string (e.g., `title: 'Title with "quotes"'`).
 
 ## Current Branch State
-- **`main`** — Last pushed commit: `cbf2f73` (Mobile sidebar nav, larger title, hamburger icon)
-- **`feature/mobile-research-feed`** — Active development branch with:
+- **`main`** — Active production branch. `feature/mobile-research-feed` was merged in.
+- All mobile rework changes are now live on main:
+  - [x] Mobile header: icon left, title centered, sliding sidebar nav with hamburger/X
   - [x] Mobile research feed: "Daily Research News" title + "All research news: here" subtitle
-  - [x] 80% width scrollable container with 5-card height
+  - [x] 80% width scrollable container with 2.5-card height
   - [x] Accordion collapsible cards (tags+title collapsed, expand to show brief + external link warning)
   - [x] Nav label changed: "Research Feed" → "All News"
   - [x] News page title: "Research News" → "Research in the News"
   - [x] News page cards: non-clickable `<div>`, explicit "Read full article" link with red external warning
-  - [ ] Test on real mobile device & merge to main
+  - [x] Mobile YouTube: channel banner + 2x2 video grid
+  - [x] 5 new news articles added (18th Feb 2026)
 
 ## What's NOT Built Yet
 - News archive viewer (for articles older than 30 days)

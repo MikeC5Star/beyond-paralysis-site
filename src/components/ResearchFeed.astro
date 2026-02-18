@@ -240,13 +240,13 @@ function getTechColor(rating: number) {
 		const cards = document.querySelectorAll('.news-card');
 		if (!container || cards.length === 0) return;
 
-		// Calculate container height: 5 collapsed cards + gaps
-		// Measure first card's collapsed height
+		// Calculate container height: 2.5 collapsed cards + gaps
+		// Half-visible card signals "scroll for more"
 		const firstCard = cards[0] as HTMLElement;
 		const cardHeight = firstCard.offsetHeight;
 		const gap = 8; // gap-2 = 0.5rem = 8px
 		const containerPadding = 24; // p-3 = 12px * 2
-		const containerHeight = (cardHeight * 5) + (gap * 4) + containerPadding;
+		const containerHeight = (cardHeight * 2.5) + (gap * 2) + containerPadding;
 		container.style.maxHeight = containerHeight + 'px';
 
 		// Stop source links from triggering accordion

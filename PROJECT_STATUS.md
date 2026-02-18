@@ -189,7 +189,7 @@ The glob loader picks up all nested `.md` files automatically — folder structu
   - **Desktop:** "Live Research Alerts" title, card-based scrollable feed (max-h 600px), max 20 items from last 30 days, custom teal scrollbar, cards are clickable `<a>` tags linking to external source
   - **Mobile:** "Daily Research News" title with "All research news: here" subtitle linking to /news. 80% width centered container with visible border. Fixed height = 2.5 collapsed cards (half-visible card signals "scroll for more"). Accordion behaviour: collapsed cards show tags + title only, click to expand and see brief + "Read full article →" link with red external warning. Only one card open at a time. All start collapsed.
 - **YouTube Section** (bottom):
-  - **Desktop:** "Latest Videos" title, 4-video grid (2-col on sm, 4-col on lg) from `src/config/youtube.ts`
+  - **Desktop:** "Mike's Channel & Latest Videos" title (`text-2xl`, centered). Visible container (`max-w-3xl`, border, `clinical-card` bg). Channel banner image full-width with teal glow, clickable link to YouTube channel. 2x2 video grid below, same width as banner.
   - **Mobile:** "Mike's Channel & Latest Videos" title, 90% width centered. Channel banner image (`channel-banner.jpg`) with teal glow + rounded corners, clickable link to YouTube channel. 2x2 video grid below.
 
 ### News Page (/news/) — "Research in the News"
@@ -264,6 +264,7 @@ Update this file to change which videos appear on the homepage.
   - [x] News page title: "Research News" → "Research in the News"
   - [x] News page cards: non-clickable `<div>`, explicit "Read full article" link with red external warning
   - [x] Mobile YouTube: channel banner + 2x2 video grid
+  - [x] Desktop YouTube: channel container with banner + 2x2 grid (matching banner width)
   - [x] 5 new news articles added (18th Feb 2026)
 
 ## What's NOT Built Yet

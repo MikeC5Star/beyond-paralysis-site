@@ -125,7 +125,7 @@ pdfUrl: "https://assets.beyondparalysis.uk/filename.pdf"  # Optional — full UR
 youtubeUrl: "https://youtube.com/..."                      # Optional
 ```
 
-**Current reports** (10 total):
+**Current reports** (11 total):
 1. Griffith_Uni.md — Griffith OEC Nerve Bridge trial (youtubeUrl: Pam3jzLaNaQ)
 2. NervGen.md — NervGen NVG-291 CONNECT-SCI trial (youtubeUrl: Yxax9XBNbBo)
 3. Polylaminin.md — Polylaminin: A New Biomaterial for Neural Repair (youtubeUrl: GzQmaBCJVcs)
@@ -136,6 +136,7 @@ youtubeUrl: "https://youtube.com/..."                      # Optional
 8. Neuromodulation.md — Neuromodulation: Electrical Stimulation for Recovery
 9. SCI_2024_2026_Therapies.md — The Pivot Point: 2025-2026 SCI Research Dossier
 10. Northwestern_Dancing_Molecules.md — Northwestern: Dancing Molecules and the SCI Research Ecosystem
+11. Ireland_RNA_implant.md — Releasing the Brake: RCSI's RNA-Activated Implant for Spinal Cord Repair
 
 **PDF hosting**: PDFs are hosted on Cloudflare R2 at `assets.beyondparalysis.uk`. The `pdfUrl` field contains the full URL (spaces encoded as `%20`). No local PDF storage — `public/pdfs/` has been removed.
 
@@ -167,6 +168,12 @@ src/content/news/
 │       ├── scs-diabetic-neuropathy.md
 │       ├── cxcl4-fibrotic-scarring-sci.md
 │       └── depleting-neuroinflammation-chronic-sci.md
+│   └── 190226/
+│       ├── rna-implant-nerve-regrowth.md
+│       ├── dual-action-nanoparticle-sci.md
+│       ├── rcsi-3d-implant-spinal-healing.md
+│       ├── arc-ex-mobility-sci.md
+│       └── bydon-miraculous-treatments-sci.md
 ├── mar/
 │   └── 010326/
 └── april/
@@ -186,7 +193,7 @@ The glob loader picks up all nested `.md` files automatically — folder structu
 ### Homepage
 - **Hero Section** (left): Featured video "Is Paralysis Recovery on the Horizon?" (video ID: `4SfBB5jq-0k`)
 - **Research Feed** (right sidebar on desktop, full-width on mobile):
-  - **Desktop:** "Live Research Alerts" title, card-based scrollable feed (max-h 600px), max 20 items from last 30 days, custom teal scrollbar, cards are clickable `<a>` tags linking to external source
+  - **Desktop:** "Live Research Alerts" title, card-based scrollable feed (max-h 600px), max 20 items from last 30 days, custom teal scrollbar. Cards are non-clickable `<div>` elements with explicit "Read full article →" link + red external warning at bottom.
   - **Mobile:** "Daily Research News" title with "All research news: here" subtitle linking to /news. 80% width centered container with visible border. Fixed height = 2.5 collapsed cards (half-visible card signals "scroll for more"). Accordion behaviour: collapsed cards show tags + title only, click to expand and see brief + "Read full article →" link with red external warning. Only one card open at a time. All start collapsed.
 - **YouTube Section** (bottom):
   - **Desktop:** "Mike's Channel & Latest Videos" title (`text-2xl`, centered). Visible container (`max-w-3xl`, border, `clinical-card` bg). Channel banner image full-width with teal glow, clickable link to YouTube channel. 2x2 video grid below, same width as banner.
@@ -266,6 +273,10 @@ Update this file to change which videos appear on the homepage.
   - [x] Mobile YouTube: channel banner + 2x2 video grid
   - [x] Desktop YouTube: channel container with banner + 2x2 grid (matching banner width)
   - [x] 5 new news articles added (18th Feb 2026)
+  - [x] 5 new news articles added (19th Feb 2026)
+  - [x] Desktop ResearchFeed sidebar: cards now non-clickable with explicit external link + red warning
+  - [x] New Deep Dive report: Ireland_RNA_implant.md — RCSI RNA-Activated Implant (11 reports total)
+  - [x] Directory structure updated: 180226/ and 190226/ news folders added
 
 ## What's NOT Built Yet
 - News archive viewer (for articles older than 30 days)

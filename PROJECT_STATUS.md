@@ -58,17 +58,19 @@ beyond-paralysis-site/
 │   │   └── reports/          # 10 deep dive reports (see Reports section)
 │   │
 │   ├── layouts/
-│   │   └── BaseLayout.astro  # HTML shell, Header, dark theme, dual SVG background overlays
+│   │   └── BaseLayout.astro  # HTML shell, Header, Footer, dark theme, dual SVG background overlays
 │   │
 │   ├── components/
 │   │   ├── Header.astro      # Dual-layout header: mobile (icon+title centered, sidebar nav) + desktop (inline nav)
 │   │   ├── HeroSection.astro # Featured video: "Is Paralysis Recovery on the Horizon?" (4SfBB5jq-0k)
 │   │   ├── ResearchFeed.astro# Dual-layout: mobile accordion feed + desktop sidebar feed
-│   │   └── YouTubeSection.astro # Dual-layout: mobile channel section (banner + 2x2 grid) + desktop 4-col grid
+│   │   ├── YouTubeSection.astro # Dual-layout: mobile channel section (banner + 2x2 grid) + desktop channel container + 2x2 grid
+│   │   └── Footer.astro         # Site-wide footer: copyright, Privacy Policy link, Contact Me mailto
 │   │
 │   └── pages/
 │       ├── index.astro       # Homepage: Hero (left) + ResearchFeed (right) + YouTube (bottom)
 │       ├── about.astro       # About Mike — personal story text + "My Story" YouTube video (gPr4XiVQHf4)
+│       ├── privacy-policy.astro # Privacy policy page at /privacy-policy
 │       ├── news/
 │       │   └── [...page].astro # Paginated news — "Research in the News" title, non-clickable cards with explicit external links
 │       └── reports/
@@ -277,6 +279,15 @@ Update this file to change which videos appear on the homepage.
   - [x] Desktop ResearchFeed sidebar: cards now non-clickable with explicit external link + red warning
   - [x] New Deep Dive report: Ireland_RNA_implant.md — RCSI RNA-Activated Implant (11 reports total)
   - [x] Directory structure updated: 180226/ and 190226/ news folders added
+  - [x] Footer component added (copyright, Privacy Policy link, Contact Me mailto)
+  - [x] Privacy Policy page at /privacy-policy (styled with Clinical Realism theme)
+  - [x] Analytics: GA4 via Cloudflare Zaraz (external setup — no code in Astro files)
+  - [x] Email: contact@beyondparalysis.uk via Cloudflare Email Routing (external setup)
+
+## External Integrations (managed outside Astro codebase)
+- **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files
+- **Cookie Consent Banner**: Managed by Cloudflare Zaraz automatically
+- **Email**: Cloudflare Email Routing → `contact@beyondparalysis.uk`
 
 ## What's NOT Built Yet
 - News archive viewer (for articles older than 30 days)

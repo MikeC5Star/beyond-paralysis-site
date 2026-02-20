@@ -176,6 +176,10 @@ src/content/news/
 │       ├── rcsi-3d-implant-spinal-healing.md
 │       ├── arc-ex-mobility-sci.md
 │       └── bydon-miraculous-treatments-sci.md
+│   └── 200226/
+│       ├── rna-implant-pten-nerve-regrowth.md
+│       ├── sci-rehabilitation-inequalities-uk.md
+│       └── polylaminin-clinical-trial-tatiana.md  (goldenRead: true)
 ├── mar/
 │   └── 010326/
 └── april/
@@ -283,6 +287,9 @@ Update this file to change which videos appear on the homepage.
   - [x] Privacy Policy page at /privacy-policy (styled with Clinical Realism theme)
   - [x] Analytics: GA4 via Cloudflare Zaraz (external setup — no code in Astro files)
   - [x] Email: contact@beyondparalysis.uk via Cloudflare Email Routing (external setup)
+  - [x] 3 new news articles added (20th Feb 2026) — incl. Polylaminin as Golden Read
+  - [x] Date added to all news cards (mobile expanded + desktop sidebar) in text-xs text-slate-400
+  - [x] ResearchFeed: formatDate() helper added for consistent date formatting
 
 ## External Integrations (managed outside Astro codebase)
 - **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files

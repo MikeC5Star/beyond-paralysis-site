@@ -9,6 +9,10 @@ const news = (await getCollection('news'))
 	.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 	.slice(0, 20);
 
+function formatDate(date: Date) {
+	return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
 /**
  * Category → colour map. Each category gets a distinct colour
  * so users can visually scan research areas at a glance.
@@ -97,6 +101,7 @@ function getTechColor(rating: number) {
 							{item.data.title}
 						</h3>
 						<div class="news-card-brief hidden mt-2">
+							<p class="text-xs text-slate-400 leading-relaxed mb-1">{formatDate(item.data.pubDate)}</p>
 							<p class="text-xs text-slate-400 leading-relaxed">
 								{item.data.brief}
 							</p>
@@ -153,7 +158,8 @@ function getTechColor(rating: number) {
 				<h3 class={`text-sm font-bold leading-snug ${item.data.goldenRead ? 'text-yellow-300' : 'text-white'}`}>
 					{item.data.title}
 				</h3>
-				<p class="text-xs text-slate-400 mt-1.5 leading-relaxed line-clamp-3">
+				<p class="text-xs text-slate-400 mt-1.5 leading-relaxed">{formatDate(item.data.pubDate)}</p>
+				<p class="text-xs text-slate-400 mt-1 leading-relaxed line-clamp-3">
 					{item.data.brief}
 				</p>
 				{item.data.sourceUrl && (

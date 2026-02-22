@@ -180,6 +180,12 @@ src/content/news/
 │       ├── rna-implant-pten-nerve-regrowth.md
 │       ├── sci-rehabilitation-inequalities-uk.md
 │       └── polylaminin-clinical-trial-tatiana.md  (goldenRead: true)
+│   └── 220226/
+│       ├── lab-grown-organoids-dancing-molecules.md
+│       ├── lifeward-verita-neuro-distribution.md  (goldenRead: true)
+│       ├── rna-implant-pten-scaffold-nerve-regrowth.md
+│       ├── polylaminin-tatiana-sampaio-clinical-trials.md
+│       └── photobiomodulation-zinc-oxide-neurovascular.md
 ├── mar/
 │   └── 010326/
 └── april/
@@ -290,6 +296,7 @@ Update this file to change which videos appear on the homepage.
   - [x] 3 new news articles added (20th Feb 2026) — incl. Polylaminin as Golden Read
   - [x] Date added to all news cards (mobile expanded + desktop sidebar) in text-xs text-slate-400
   - [x] ResearchFeed: formatDate() helper added for consistent date formatting
+  - [x] 5 new news articles added (22nd Feb 2026) — incl. Lifeward/Verita Neuro as Golden Read
 
 ## External Integrations (managed outside Astro codebase)
 - **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files

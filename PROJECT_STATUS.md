@@ -198,6 +198,22 @@ src/content/news/
 │       ├── zebrafish-spinal-cord-regeneration.md
 │       ├── new-treatments-toddler-recovery-podcast.md  (goldenRead: true)
 │       └── gel-mini-spinal-cords-organoids.md
+│   └── 240226/
+│       ├── intensive-task-training-phase3-trial.md
+│       ├── short-chain-fatty-acids-gut-sci.md
+│       ├── ultrasound-muscle-tracking-rehab.md
+│       ├── osteoporosis-fracture-risk-sci-korea.md
+│       ├── dysphonia-speech-rehab-sci.md
+│       ├── vagus-nerve-stimulation-home-rehab.md
+│       ├── sacral-root-stimulation-bladder-bowel.md
+│       ├── photobiomodulation-nanoflakes-neurovascular.md
+│       ├── intraparenchymal-stem-cell-transplant-review.md
+│       ├── spinal-circuit-reorganization-locomotion.md
+│       ├── prussian-blue-nanozymes-sci-repair.md
+│       ├── fascin1-microglia-oxidative-stress.md
+│       ├── reversing-bone-loss-sci.md
+│       ├── lab-grown-corticospinal-neurons-mnd.md
+│       └── autonomic-dysreflexia-ai-monitoring.md  (goldenRead: true)
 ├── mar/
 │   └── 010326/
 └── april/
@@ -310,6 +326,7 @@ Update this file to change which videos appear on the homepage.
   - [x] ResearchFeed: formatDate() helper added for consistent date formatting
   - [x] 5 new news articles added (22nd Feb 2026) — incl. Lifeward/Verita Neuro as Golden Read
   - [x] 11 new news articles added (23rd Feb 2026) — incl. toddler recovery podcast as Golden Read
+  - [x] 15 new news articles added (24th Feb 2026) — incl. autonomic dysreflexia AI monitoring as Golden Read
 
 ## External Integrations (managed outside Astro codebase)
 - **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files

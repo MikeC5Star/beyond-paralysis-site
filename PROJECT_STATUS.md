@@ -186,6 +186,18 @@ src/content/news/
 │       ├── rna-implant-pten-scaffold-nerve-regrowth.md
 │       ├── polylaminin-tatiana-sampaio-clinical-trials.md
 │       └── photobiomodulation-zinc-oxide-neurovascular.md
+│   └── 230226/
+│       ├── botulinum-toxin-spasticity-sci.md
+│       ├── wheelchair-activity-app-usability.md
+│       ├── neural-stem-cells-inflammation-review.md
+│       ├── inhibitory-excitatory-imbalance-incomplete-sci.md
+│       ├── single-cell-sci-pathophysiology.md
+│       ├── vr-upper-limb-rehab-design.md
+│       ├── brain-controlled-cervical-stimulation-upper-limb.md
+│       ├── minocycline-bone-marrow-complete-sci.md
+│       ├── zebrafish-spinal-cord-regeneration.md
+│       ├── new-treatments-toddler-recovery-podcast.md  (goldenRead: true)
+│       └── gel-mini-spinal-cords-organoids.md
 ├── mar/
 │   └── 010326/
 └── april/
@@ -297,6 +309,7 @@ Update this file to change which videos appear on the homepage.
   - [x] Date added to all news cards (mobile expanded + desktop sidebar) in text-xs text-slate-400
   - [x] ResearchFeed: formatDate() helper added for consistent date formatting
   - [x] 5 new news articles added (22nd Feb 2026) — incl. Lifeward/Verita Neuro as Golden Read
+  - [x] 11 new news articles added (23rd Feb 2026) — incl. toddler recovery podcast as Golden Read
 
 ## External Integrations (managed outside Astro codebase)
 - **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files

@@ -2,6 +2,7 @@
 title: "The Cryo-Bridge: A New All-in-One Highway for Nerve Repair"
 pubDate: 2026-02-15
 pdfUrl: "https://assets.beyondparalysis.uk/cryopreservation-thawing-transplantation-neural-stem-cell-SCI.pdf"
+audioUrl: "/audio/cryo-bridge-audio-overview.mp3"
 executiveSummary: "This research introduces a revolutionary 'closed-loop' platform that combines the freezing, thawing, and delivery of neural stem cells into a single system. By using specialized bioactive 'microspheres' and 'exosomes,' this method ensures high cell survival and guides them to specifically rebuild lost nerve connections in the spinal cord."
 ---
 

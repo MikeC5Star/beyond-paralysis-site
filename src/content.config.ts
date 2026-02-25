@@ -22,6 +22,7 @@ const reportsCollection = defineCollection({
     pubDate: z.date(),
     youtubeUrl: z.string().url().optional(),
     pdfUrl: z.string().url().optional(),
+    audioUrl: z.string().optional(),
     executiveSummary: z.string(),
   }),
 });

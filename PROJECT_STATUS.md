@@ -139,6 +139,7 @@ youtubeUrl: "https://youtube.com/..."                      # Optional
 9. SCI_2024_2026_Therapies.md — The Pivot Point: 2025-2026 SCI Research Dossier
 10. Northwestern_Dancing_Molecules.md — Northwestern: Dancing Molecules and the SCI Research Ecosystem
 11. Ireland_RNA_implant.md — Releasing the Brake: RCSI's RNA-Activated Implant for Spinal Cord Repair
+12. Cell_therapy_safty.md — The Direct Route: Inside the Era of Intraparenchymal Spinal Cord Repair (audioUrl set)
 
 **PDF hosting**: PDFs are hosted on Cloudflare R2 at `assets.beyondparalysis.uk`. The `pdfUrl` field contains the full URL (spaces encoded as `%20`). No local PDF storage — `public/pdfs/` has been removed.
 
@@ -327,6 +328,9 @@ Update this file to change which videos appear on the homepage.
   - [x] 5 new news articles added (22nd Feb 2026) — incl. Lifeward/Verita Neuro as Golden Read
   - [x] 11 new news articles added (23rd Feb 2026) — incl. toddler recovery podcast as Golden Read
   - [x] 15 new news articles added (24th Feb 2026) — incl. autonomic dysreflexia AI monitoring as Golden Read
+  - [x] New Deep Dive report: Cell_therapy_safty.md — Intraparenchymal stem cell transplantation (12 reports total)
+  - [x] Podcast audio player added to Deep Dive report pages (audioUrl field in schema)
+  - [x] Audio: The_Cryo_Bridge.md + Cell_therapy_safty.md have AI podcast overviews (public/audio/)
 
 ## External Integrations (managed outside Astro codebase)
 - **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files

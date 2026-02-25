@@ -53,6 +53,67 @@ const headings = h2s.length > 0 ? h2s : renderedHeadings.filter(h => h.depth ===
 			<p class="text-slate-400 mt-4 leading-relaxed text-lg border-l-2 border-clinical-accent/30 pl-4 italic">{report.data.executiveSummary}</p>
 		</header>
 
+		<!-- Podcast Player -->
+		{report.data.audioUrl && (
+			<div class="max-w-4xl mb-10">
+				<div class="card-glow rounded-2xl p-6 border border-clinical-accent/20 bg-clinical-card">
+					<div class="flex items-center gap-3 mb-4">
+						<!-- Animated waveform icon -->
+						<div class="flex items-end gap-[3px] h-6 shrink-0" aria-hidden="true">
+							<span class="w-[3px] rounded-full bg-clinical-accent podcast-bar" style="height:40%;animation-delay:0s"></span>
+							<span class="w-[3px] rounded-full bg-clinical-accent podcast-bar" style="height:80%;animation-delay:0.15s"></span>
+							<span class="w-[3px] rounded-full bg-clinical-accent podcast-bar" style="height:55%;animation-delay:0.3s"></span>
+							<span class="w-[3px] rounded-full bg-clinical-accent podcast-bar" style="height:100%;animation-delay:0.1s"></span>
+							<span class="w-[3px] rounded-full bg-clinical-accent podcast-bar" style="height:65%;animation-delay:0.25s"></span>
+						</div>
+						<div>
+							<p class="text-clinical-accent font-semibold text-sm tracking-wide uppercase">Listen to the Podcast</p>
+							<p class="text-slate-400 text-xs mt-0.5">AI-generated audio overview of this Deep Dive report</p>
+						</div>
+					</div>
+
+					<!-- Custom audio player -->
+					<div class="flex items-center gap-4">
+						<!-- Play/Pause button -->
+						<button
+							id="podcast-play-btn"
+							aria-label="Play podcast"
+							class="shrink-0 w-12 h-12 rounded-full bg-clinical-accent flex items-center justify-center hover:bg-cyan-300 transition-colors shadow-lg shadow-clinical-accent/30"
+						>
+							<!-- Play icon -->
+							<svg id="podcast-play-icon" class="w-5 h-5 text-clinical-bg ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M8 5v14l11-7z"/>
+							</svg>
+							<!-- Pause icon (hidden initially) -->
+							<svg id="podcast-pause-icon" class="w-5 h-5 text-clinical-bg hidden" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+							</svg>
+						</button>
+
+						<!-- Scrubber + time -->
+						<div class="flex-1 flex flex-col gap-1.5">
+							<input
+								id="podcast-scrubber"
+								type="range"
+								min="0"
+								max="100"
+								value="0"
+								step="0.1"
+								class="w-full h-1.5 rounded-full appearance-none cursor-pointer podcast-scrubber"
+								aria-label="Audio progress"
+							/>
+							<div class="flex justify-between text-xs text-slate-500 tabular-nums">
+								<span id="podcast-current">0:00</span>
+								<span id="podcast-duration">--:--</span>
+							</div>
+						</div>
+					</div>
+
+					<audio id="podcast-audio" src={report.data.audioUrl} preload="metadata"></audio>
+				</div>
+			</div>
+		)}
+
 		<!-- Layout: Content + TOC sidebar -->
 		<div class="grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-10">
 
@@ -209,6 +270,38 @@ const headings = h2s.length > 0 ? h2s : renderedHeadings.filter(h => h.depth ===
 			inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 	}
 
+	/* ===== Podcast Player ===== */
+	.podcast-bar {
+		animation: podcast-pulse 1.2s ease-in-out infinite alternate;
+	}
+	@keyframes podcast-pulse {
+		from { transform: scaleY(0.4); }
+		to   { transform: scaleY(1); }
+	}
+
+	.podcast-scrubber {
+		background: rgba(0, 229, 255, 0.15);
+		accent-color: #00e5ff;
+	}
+	.podcast-scrubber::-webkit-slider-thumb {
+		appearance: none;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		background: #00e5ff;
+		cursor: pointer;
+		box-shadow: 0 0 6px rgba(0, 229, 255, 0.7);
+	}
+	.podcast-scrubber::-moz-range-thumb {
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		background: #00e5ff;
+		cursor: pointer;
+		border: none;
+		box-shadow: 0 0 6px rgba(0, 229, 255, 0.7);
+	}
+
 	/* Nested h3 cards inside h2 cards */
 	.report-content .section-card .sub-section-card {
 		background: rgba(15, 23, 42, 0.5);
@@ -219,6 +312,57 @@ const headings = h2s.length > 0 ? h2s : renderedHeadings.filter(h => h.depth ===
 </style>
 
 <script>
+	// ===== Podcast Player =====
+	const audio = document.getElementById('podcast-audio') as HTMLAudioElement | null;
+	const playBtn = document.getElementById('podcast-play-btn');
+	const playIcon = document.getElementById('podcast-play-icon');
+	const pauseIcon = document.getElementById('podcast-pause-icon');
+	const scrubber = document.getElementById('podcast-scrubber') as HTMLInputElement | null;
+	const currentEl = document.getElementById('podcast-current');
+	const durationEl = document.getElementById('podcast-duration');
+
+	function formatTime(s: number): string {
+		const m = Math.floor(s / 60);
+		const sec = Math.floor(s % 60).toString().padStart(2, '0');
+		return `${m}:${sec}`;
+	}
+
+	if (audio && playBtn && scrubber) {
+		audio.addEventListener('loadedmetadata', () => {
+			if (durationEl) durationEl.textContent = formatTime(audio.duration);
+			scrubber.max = String(audio.duration);
+		});
+
+		audio.addEventListener('timeupdate', () => {
+			if (currentEl) currentEl.textContent = formatTime(audio.currentTime);
+			scrubber.value = String(audio.currentTime);
+			// Update fill colour on scrubber track
+			const pct = (audio.currentTime / audio.duration) * 100;
+			scrubber.style.background = `linear-gradient(to right, #00e5ff ${pct}%, rgba(0,229,255,0.15) ${pct}%)`;
+		});
+
+		playBtn.addEventListener('click', () => {
+			if (audio.paused) {
+				audio.play();
+				playIcon?.classList.add('hidden');
+				pauseIcon?.classList.remove('hidden');
+			} else {
+				audio.pause();
+				playIcon?.classList.remove('hidden');
+				pauseIcon?.classList.add('hidden');
+			}
+		});
+
+		audio.addEventListener('ended', () => {
+			playIcon?.classList.remove('hidden');
+			pauseIcon?.classList.add('hidden');
+		});
+
+		scrubber.addEventListener('input', () => {
+			audio.currentTime = Number(scrubber.value);
+		});
+	}
+
 	// Wrap sections in glowing card containers.
 	// h2 sections become main cards; h3 sections inside them become sub-cards.
 	document.addEventListener('DOMContentLoaded', () => {

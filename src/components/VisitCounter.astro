@@ -1,0 +1,38 @@
+---
+// VisitCounter.astro
+// Fetches from the Cloudflare Worker /api/visit endpoint on page load
+// Displays total all-time visits + today's visits
+---
+
+<div class="visit-counter-wrap flex flex-col items-center gap-1 py-4">
+	<div class="flex items-center gap-6 text-center">
+		<div class="flex flex-col items-center">
+			<span class="text-xs uppercase tracking-widest text-slate-500 mb-1">Total Visits</span>
+			<span id="vc-total" class="text-2xl font-bold text-clinical-accent tabular-nums">—</span>
+		</div>
+		<div class="w-px h-8 bg-slate-700"></div>
+		<div class="flex flex-col items-center">
+			<span class="text-xs uppercase tracking-widest text-slate-500 mb-1">Today</span>
+			<span id="vc-today" class="text-2xl font-bold text-slate-300 tabular-nums">—</span>
+		</div>
+	</div>
+	<p class="text-xs text-slate-600 mt-1">Live visitor counter · resets midnight UK time</p>
+</div>
+
+<script>
+	async function loadCounter() {
+		const totalEl = document.getElementById('vc-total');
+		const todayEl = document.getElementById('vc-today');
+		try {
+			const res = await fetch('https://beyondparalysis.uk/api/visit');
+			if (!res.ok) throw new Error('non-200');
+			const data = await res.json() as { total: number; today: number };
+			if (totalEl) totalEl.textContent = data.total.toLocaleString('en-GB');
+			if (todayEl) todayEl.textContent = data.today.toLocaleString('en-GB');
+		} catch {
+			if (totalEl) totalEl.textContent = '—';
+			if (todayEl) todayEl.textContent = '—';
+		}
+	}
+	loadCounter();
+</script>

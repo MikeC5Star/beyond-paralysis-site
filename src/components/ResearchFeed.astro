@@ -123,7 +123,7 @@ function getTechColor(rating: number) {
 	)}
 </div>
 
-<!-- ===== DESKTOP VERSION (sm and up) — unchanged ===== -->
+<!-- ===== DESKTOP VERSION (sm and up) ===== -->
 <aside class="hidden sm:flex flex-col gap-1 h-full">
 	<h2 class="text-lg font-bold mb-3 flex items-center gap-2">
 		<span class="inline-block w-1 h-6 rounded-full bg-clinical-accent"></span>
@@ -136,42 +136,54 @@ function getTechColor(rating: number) {
 
 	<div class="flex flex-col gap-3 overflow-y-auto max-h-[600px] pr-1 feed-scroll">
 		{news.map(item => (
-			<div class={`rounded-xl p-4 transition-all relative ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}>
+			<div class={`desktop-news-card rounded-xl p-4 cursor-pointer transition-all relative ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}>
 				{item.data.goldenRead && (
 					<span class="golden-tooltip">Mike's Recommended Read</span>
 				)}
-				<div class="flex flex-wrap items-center gap-1.5 mb-2">
-					{item.data.goldenRead && (
-						<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-							★ Golden Read
-						</span>
-					)}
-					{item.data.category.map(cat => (
-						<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getCategoryColor(cat)}`}>
-							{cat}
-						</span>
-					))}
-					<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getTechColor(item.data.techRating)}`}>
-						Tech: {item.data.techRating}/5
-					</span>
+				<!-- Collapsed: badges + title + chevron -->
+				<div class="flex items-start gap-2">
+					<div class="flex-1 min-w-0">
+						<div class="flex flex-wrap items-center gap-1.5 mb-2">
+							{item.data.goldenRead && (
+								<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+									★ Golden Read
+								</span>
+							)}
+							{item.data.category.map(cat => (
+								<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getCategoryColor(cat)}`}>
+									{cat}
+								</span>
+							))}
+							<span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${getTechColor(item.data.techRating)}`}>
+								Tech: {item.data.techRating}/5
+							</span>
+						</div>
+						<h3 class={`text-sm font-bold leading-snug ${item.data.goldenRead ? 'text-yellow-300' : 'text-white'}`}>
+							{item.data.title}
+						</h3>
+					</div>
+					<!-- Chevron -->
+					<svg class="desktop-chevron shrink-0 mt-1 w-3.5 h-3.5 text-slate-500 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+					</svg>
 				</div>
-				<h3 class={`text-sm font-bold leading-snug ${item.data.goldenRead ? 'text-yellow-300' : 'text-white'}`}>
-					{item.data.title}
-				</h3>
-				<p class="text-xs text-slate-400 mt-1.5 leading-relaxed">{formatDate(item.data.pubDate)}</p>
-				<p class="text-xs text-slate-400 mt-1 leading-relaxed line-clamp-3">
-					{item.data.brief}
-				</p>
-				{item.data.sourceUrl && (
-					<a
-						href={item.data.sourceUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="inline-block mt-2 text-[11px] text-clinical-accent hover:underline no-underline"
-					>
-						Read full article &rarr; <span class="text-red-400">(warning: takes you to external page)</span>
-					</a>
-				)}
+				<!-- Expandable section -->
+				<div class="desktop-news-brief hidden mt-2">
+					<p class="text-xs text-slate-400 leading-relaxed mb-1">{formatDate(item.data.pubDate)}</p>
+					<p class="text-xs text-slate-400 leading-relaxed">
+						{item.data.brief}
+					</p>
+					{item.data.sourceUrl && (
+						<a
+							href={item.data.sourceUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="desktop-source-link inline-block mt-2 text-[11px] text-clinical-accent hover:underline no-underline"
+						>
+							Read full article &rarr; <span class="text-red-400">(warning: takes you to external page)</span>
+						</a>
+					)}
+				</div>
 			</div>
 		))}
 	</div>
@@ -239,9 +251,20 @@ function getTechColor(rating: number) {
 	.news-card.expanded {
 		border-color: rgba(0, 229, 255, 0.3);
 	}
-
 	.news-card.expanded .news-card-brief {
 		display: block;
+	}
+
+	/* Desktop news card expanded state */
+	.desktop-news-card.expanded .desktop-news-brief {
+		display: block;
+	}
+	.desktop-news-card.expanded .desktop-chevron {
+		transform: rotate(180deg);
+		color: #00e5ff;
+	}
+	.desktop-news-card:hover {
+		border-color: rgba(0, 229, 255, 0.2);
 	}
 </style>
 
@@ -287,7 +310,26 @@ function getTechColor(rating: number) {
 		});
 	}
 
+	function initDesktopNewsFeed() {
+		const cards = document.querySelectorAll('.desktop-news-card');
+		if (cards.length === 0) return;
+
+		cards.forEach(card => {
+			card.addEventListener('click', (e) => {
+				const target = e.target as HTMLElement;
+				// Don't toggle if clicking a link inside
+				if (target.tagName === 'A' || target.closest('a')) return;
+
+				card.classList.toggle('expanded');
+			});
+		});
+	}
+
 	// Run on initial load and on Astro page transitions
 	initMobileNewsFeed();
-	document.addEventListener('astro:after-swap', initMobileNewsFeed);
+	initDesktopNewsFeed();
+	document.addEventListener('astro:after-swap', () => {
+		initMobileNewsFeed();
+		initDesktopNewsFeed();
+	});
 </script>

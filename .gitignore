@@ -28,3 +28,4 @@ pnpm-debug.log*
 
 # unused assets
 public/icons.png
+*.mp3

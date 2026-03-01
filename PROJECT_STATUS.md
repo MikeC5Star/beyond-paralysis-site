@@ -215,6 +215,12 @@ src/content/news/
 │       ├── reversing-bone-loss-sci.md
 │       ├── lab-grown-corticospinal-neurons-mnd.md
 │       └── autonomic-dysreflexia-ai-monitoring.md  (goldenRead: true)
+│   └── 270226/
+│       ├── spina-bifida-stem-cells-womb.md
+│       ├── cardiovascular-risk-framework-sci.md
+│       ├── extracellular-vesicles-engineered-sci.md
+│       ├── tgf-beta-fibrotic-scar-sci.md
+│       └── exoskeleton-early-inpatient-rehab-review.md
 ├── mar/
 │   └── 010326/
 └── april/
@@ -331,6 +337,7 @@ Update this file to change which videos appear on the homepage.
   - [x] New Deep Dive report: Cell_therapy_safty.md — Intraparenchymal stem cell transplantation (12 reports total)
   - [x] Podcast audio player added to Deep Dive report pages (audioUrl field in schema)
   - [x] Audio: The_Cryo_Bridge.md + Cell_therapy_safty.md have AI podcast overviews (public/audio/)
+  - [x] 5 new news articles added (27th Feb 2026) — world-first spina bifida womb surgery, TGF-β scar, engineered EVs
 
 ## External Integrations (managed outside Astro codebase)
 - **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files

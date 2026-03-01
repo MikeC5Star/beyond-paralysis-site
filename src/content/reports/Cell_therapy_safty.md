@@ -1,8 +1,9 @@
 ---
 title: "The Direct Route: Inside the Era of Intraparenchymal Spinal Cord Repair"
 pubDate: 2026-02-25
-pdfUrl: "https://assets.beyondparalysis.uk/Intraparenchymal%20stem%20cell%20transplantation%20for%20spinal%20cord%20injury%20a%20review%20of%20clinical%20trials.pdf"
+pdfUrl: "https://assets.beyondparalysis.uk/Intraparenchymal%20stem%20cell%20transplantation%20for%20spinal%20cord%20injury%20%20a%20review%20of%20clinical%20trials%20(1).pdf"
 audioUrl: "/audio/cell-therapy-safety-audio-overview.mp3"
+youtubeUrl: "https://youtube.com/shorts/iLHyE8WvaA4?feature=share"
 executiveSummary: "A comprehensive analysis of 20 years of clinical trials utilising direct intraparenchymal (IP) injection — delivering cells straight into the spinal cord tissue. This review confirms that while a 'magic bullet' cure remains elusive, the targeted delivery of five major stem cell platforms has proven consistently safe and biologically active."
 ---
 

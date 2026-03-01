@@ -11,7 +11,7 @@ function formatDate(date: Date) {
 }
 
 function getYouTubeId(url: string): string | null {
-	const match = url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([\w-]+)/);
+	const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([\w-]+)/);
 	return match ? match[1] : null;
 }
 ---

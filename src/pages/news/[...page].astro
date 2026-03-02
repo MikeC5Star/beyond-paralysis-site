@@ -311,7 +311,7 @@ function getTechColor(rating: number) {
 
 		// Scroll to card with offset to clear the sticky header
 		requestAnimationFrame(() => {
-			const headerOffset = 80; // matches sticky header height + breathing room
+			const headerOffset = 140; // sticky header (~80px) + breathing room
 			const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
 			window.scrollTo({ top, behavior: 'smooth' });
 			target.classList.add('card-highlight');

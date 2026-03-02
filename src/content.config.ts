@@ -11,6 +11,7 @@ const newsCollection = defineCollection({
     category: z.array(z.string()),
     goldenRead: z.boolean().optional().default(false),
     sourceUrl: z.string().url(),
+    deepDive: z.string().optional(),
     tags: z.array(z.string()).optional(),
   }),
 });

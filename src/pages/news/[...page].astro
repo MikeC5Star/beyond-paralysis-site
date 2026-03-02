@@ -120,9 +120,17 @@ function getTechColor(rating: number) {
 							<h3 class={`font-bold leading-snug ${item.data.goldenRead ? 'text-yellow-300' : 'text-white'}`}>
 								{item.data.title}
 							</h3>
+							<!-- Brief summary — always shown -->
 							<p class="text-sm text-slate-400 mt-2 leading-relaxed">
 								{item.data.brief}
 							</p>
+							<!-- Deep Dive — shown only when present (new format articles) -->
+							{item.data.deepDive && (
+								<div class="mt-3 pt-3 border-t border-slate-700/50">
+									<p class="text-[11px] font-semibold uppercase tracking-widest text-clinical-accent mb-1.5">Deep Dive</p>
+									<p class="text-sm text-slate-300 leading-relaxed" set:html={item.data.deepDive.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')} />
+								</div>
+							)}
 							{item.data.sourceUrl && (
 								<a
 									href={item.data.sourceUrl}
@@ -212,7 +220,6 @@ function getTechColor(rating: number) {
 											Read &rarr;
 										</a>
 									)}
-									<!-- Divider between items -->
 									<div class="mt-3 border-t border-slate-700/50"></div>
 								</div>
 							))}

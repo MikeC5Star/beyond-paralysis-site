@@ -309,9 +309,11 @@ function getTechColor(rating: number) {
 		// Move the card to the top of the list
 		list.prepend(target);
 
-		// Scroll to top of list with a slight delay to let DOM settle
+		// Scroll to card with offset to clear the sticky header
 		requestAnimationFrame(() => {
-			target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			const headerOffset = 80; // matches sticky header height + breathing room
+			const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+			window.scrollTo({ top, behavior: 'smooth' });
 			target.classList.add('card-highlight');
 			// Remove class after animation so it doesn't re-trigger
 			target.addEventListener('animationend', () => target.classList.remove('card-highlight'), { once: true });

@@ -22,9 +22,33 @@ const { page } = Astro.props;
 // Golden reads — all from last 30 days, for the sidebar (not paginated)
 const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-const goldenReads = (await getCollection('news'))
-	.filter(item => item.data.goldenRead && item.data.pubDate >= thirtyDaysAgo)
+
+// All news sorted same way as pagination — needed to build page number lookup
+const allNewsSorted = (await getCollection('news'))
+	.filter(item => item.data.pubDate >= thirtyDaysAgo)
 	.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const goldenReads = allNewsSorted.filter(item => item.data.goldenRead);
+
+const PAGE_SIZE = 20;
+
+/** Sanitise a content collection ID (contains slashes) into a valid HTML id */
+function toAnchor(id: string) {
+	return id.replace(/[^a-zA-Z0-9-]/g, '-');
+}
+
+/** Work out which page number (1-based) a given item falls on */
+function pageFor(id: string) {
+	const idx = allNewsSorted.findIndex(item => item.id === id);
+	return idx === -1 ? 1 : Math.floor(idx / PAGE_SIZE) + 1;
+}
+
+/** Build the href for a golden read sidebar link */
+function goldenHref(id: string) {
+	const p = pageFor(id);
+	const anchor = toAnchor(id);
+	return p === 1 ? `/news/#${anchor}` : `/news/${p}/#${anchor}`;
+}
 
 function formatDate(date: Date) {
 	return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -95,7 +119,7 @@ function getTechColor(rating: number) {
 
 				<div class="flex flex-col gap-4" id="news-list">
 					{page.data.map(item => (
-						<div id={item.id} class={`news-card-item block rounded-xl p-5 transition-all relative ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}>
+						<div id={toAnchor(item.id)} class={`news-card-item block rounded-xl p-5 transition-all relative ${item.data.goldenRead ? 'card-glow-golden golden-read' : 'card-glow'}`}>
 							{item.data.goldenRead && (
 								<span class="golden-tooltip">Mike's Recommended Read</span>
 							)}
@@ -211,7 +235,7 @@ function getTechColor(rating: number) {
 									</p>
 									<p class="text-[11px] text-slate-500 mt-0.5">{formatDate(item.data.pubDate)}</p>
 									<a
-									href={`/news/#${item.id}`}
+									href={goldenHref(item.id)}
 									class="inline-block mt-1 text-[11px] text-clinical-accent hover:underline no-underline"
 								>
 									Read &rarr;

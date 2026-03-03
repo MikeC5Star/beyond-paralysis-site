@@ -41,7 +41,10 @@ beyond-paralysis-site/
 │   ├── favicon.svg
 │   ├── channel-banner.jpg    # YouTube channel banner image (clickable link to channel)
 │   ├── pattern.svg           # Line pattern SVG used as background decoration
-│   └── sc_icon.png           # Cyan spinal cord graphic for header branding
+│   ├── sc_icon.png           # Cyan spinal cord graphic for header branding
+│   └── audio/                # AI podcast overview MP3s (NOT tracked in git — see .gitignore)
+│       ├── cryo-bridge-audio-overview.mp3
+│       └── cell-therapy-safety-audio-overview.mp3
 │
 ├── src/
 │   ├── config/
@@ -86,13 +89,16 @@ Loaded via glob from `./src/content/news` (recursive, picks up nested folders).
 # Required frontmatter for each news .md file:
 title: "Article Title"
 pubDate: 2026-02-13        # YYYY-MM-DD format
-brief: "Layman's summary"
+brief: "Layman's summary (1-2 sentences)"
+deepDive: "Detailed explanation — supports **bold** markdown inline"  # Optional — shown on /news/ page
 techRating: 3               # 1-5 scale (1=green, 2=lime, 3=yellow, 4=orange, 5=red)
 category: ["Neuro-inflammation", "Pharmacology"]  # Array of categories
 goldenRead: true            # Optional — marks as "Mike's Recommended Read" with gold glow
 sourceUrl: "https://..."    # Link to original research
 tags: ["Tag1", "Tag2"]      # Optional
 ```
+
+**New format (from 1st Mar 2026 onward)**: Each article has both `brief` (short summary for homepage/feed) and `deepDive` (expanded explanation shown on /news/ page). The `deepDive` field supports `**bold**` markdown syntax rendered via `set:html` + JS `.replace()` in the template.
 
 **Golden Read feature**: Stories with `goldenRead: true` get a gold glow border (`.card-glow-golden`), a "★ Golden Read" badge, gold title colour, and a hover tooltip saying "Mike's Recommended Read".
 
@@ -125,6 +131,7 @@ pubDate: 2026-02-13
 executiveSummary: "One-paragraph summary"
 pdfUrl: "https://assets.beyondparalysis.uk/filename.pdf"  # Optional — full URL to PDF on Cloudflare R2
 youtubeUrl: "https://youtube.com/..."                      # Optional
+audioUrl: "/audio/filename.mp3"                            # Optional — AI podcast overview (served from public/audio/)
 ```
 
 **Current reports** (11 total):
@@ -223,9 +230,21 @@ src/content/news/
 │       └── exoskeleton-early-inpatient-rehab-review.md
 ├── mar/
 │   └── 010326/
+│       ├── nano-patch-ferroptosis-sci.md
+│       ├── nerve-vs-tendon-transfers-review.md  (goldenRead: true)
+│       ├── electroacupuncture-myelin-nrg1-erb4.md
+│       ├── 20-doi-tfeb-autophagy-ferroptosis.md
+│       ├── luteolin-glial-scar-axonal-regrowth.md
+│       ├── thymoquinone-q10-bone-loss-sci.md
+│       ├── nursing-rehab-balance-wheelchair-framework.md
+│       ├── ventilator-weaning-cervical-sci-predictors.md
+│       ├── methotrexate-neurotoxic-risk-sci.md
+│       └── orange-juice-exosomes-m2-macrophage-sci.md
 └── april/
     └── 220426/
 ```
+
+**Important**: Raw scratchpad `.md` files (e.g. `010326.md`) must NEVER be left in the news folders — the glob loader will pick them up and fail Zod schema validation. Always `git rm` or delete them before committing.
 The glob loader picks up all nested `.md` files automatically — folder structure is purely organisational.
 
 ## Key Features & Behaviours
@@ -242,19 +261,38 @@ The glob loader picks up all nested `.md` files automatically — folder structu
 - **Research Feed** (right sidebar on desktop, full-width on mobile):
   - **Desktop:** "Live Research Alerts" title, card-based scrollable feed (max-h 600px), max 20 items from last 30 days, custom teal scrollbar. Cards are non-clickable `<div>` elements with explicit "Read full article →" link + red external warning at bottom.
   - **Mobile:** "Daily Research News" title with "All research news: here" subtitle linking to /news. 80% width centered container with visible border. Fixed height = 2.5 collapsed cards (half-visible card signals "scroll for more"). Accordion behaviour: collapsed cards show tags + title only, click to expand and see brief + "Read full article →" link with red external warning. Only one card open at a time. All start collapsed.
+  - **Desktop:** Cards are also collapsible accordion — collapsed = badges + title + chevron icon. Click to expand and see brief + source link. Chevron rotates 180° and turns teal when expanded. `initDesktopNewsFeed()` JS function; source link clicks don't trigger toggle.
+- **Visit Counter** (Section D, below YouTube): Fetches `/api/visit` Cloudflare Worker on each page load. Displays total visits (teal) + today's visits (white) in a compact card. UK timezone daily count via `Europe/London` `Intl.DateTimeFormat`.
 - **YouTube Section** (bottom):
   - **Desktop:** "Mike's Channel & Latest Videos" title (`text-2xl`, centered). Visible container (`max-w-3xl`, border, `clinical-card` bg). Channel banner image full-width with teal glow, clickable link to YouTube channel. 2x2 video grid below, same width as banner.
   - **Mobile:** "Mike's Channel & Latest Videos" title, 90% width centered. Channel banner image (`channel-banner.jpg`) with teal glow + rounded corners, clickable link to YouTube channel. 2x2 video grid below.
 
 ### News Page (/news/) — "Research in the News"
 - Full paginated view of last 30 days of news (20 per page)
+- **Two-column layout** (`max-w-7xl`, `grid-cols-[1fr_320px]`): main feed (left) + "My Top Picks" sidebar (right, desktop only)
 - Cards are **non-clickable** `<div>` elements (not `<a>` tags) — prevents accidental navigation to external sites
-- Each card shows: golden read badge, category colour badges, tech rating, date, title, brief, and explicit "Read full article → (warning: takes you to external news page)" link
+- Each card shows: golden read badge, category colour badges, tech rating, date, title, brief, **deep dive** (if present), and explicit "Read full article → (warning: takes you to external news page)" link
+- Deep Dive section: rendered below brief with `set:html` to support `**bold**` markdown inline
 - Golden read stories get gold glow, "★ Golden Read" badge, and hover tooltip
 - Astro generates `/news/`, `/news/2/`, `/news/3/` etc. statically — zero JS
 - Prev/Next pagination controls with disabled states
 
+**My Top Picks sidebar** (right column, desktop only, sticky):
+- Shows all golden read articles from last 30 days
+- Each entry: category badges, title (yellow), date, and "Read →" internal anchor link
+- Links computed via `goldenHref(id)`: determines correct pagination page + anchor (`/news/#anchor` or `/news/2/#anchor`)
+- Anchor IDs: content collection IDs sanitised via `toAnchor()` (slashes replaced with dashes for valid HTML ids)
+
+**Golden read anchor navigation** (JS):
+- `handleNewsHash()` reads URL hash on load and after Astro page transitions
+- Moves target card to top of list (`list.prepend(target)`)
+- Smooth-scrolls with 140px offset to clear sticky header
+- Gold flash animation (`@keyframes card-highlight`) highlights the card for 1.8s
+
 ### Report Pages (/reports/[slug])
+- **Podcast audio player** — shown when `audioUrl` is set, positioned between header and content grid
+  - Animated waveform bars (CSS `@keyframes podcast-pulse`), play/pause button, teal scrubber with live fill, time display
+  - JS handles play/pause toggle, `timeupdate` scrubber fill, scrubber input seek
 - **PDF download banner** at top (card-glow styled) if `pdfUrl` is set — links directly to R2 URL
 - **Header** with date, "Deep Dive" label, title, and executive summary (italic with teal left border)
 - **Dual heading structure**:
@@ -276,6 +314,7 @@ The glob loader picks up all nested `.md` files automatically — folder structu
 - YouTube thumbnail with play button overlay links to video (reports with `youtubeUrl`)
 - Reports without video show subtle empty placeholder in video column
 - Date display, executive summary preview (3-line clamp)
+- **YouTube Shorts support**: `getYouTubeId` regex handles both regular (`watch?v=`/`youtu.be/`) and Shorts (`youtube.com/shorts/`) URLs
 
 ### About Page (/about)
 - Personal story text about Mike's C4-5 SCI and Bangkok treatment journey
@@ -338,11 +377,28 @@ Update this file to change which videos appear on the homepage.
   - [x] Podcast audio player added to Deep Dive report pages (audioUrl field in schema)
   - [x] Audio: The_Cryo_Bridge.md + Cell_therapy_safty.md have AI podcast overviews (public/audio/)
   - [x] 5 new news articles added (27th Feb 2026) — world-first spina bifida womb surgery, TGF-β scar, engineered EVs
+  - [x] deepDive optional field added to news schema (in addition to brief)
+  - [x] New news format from 1st Mar 2026: each article has both `brief` + `deepDive` fields
+  - [x] 10 new news articles added (1st Mar 2026) — nerve-vs-tendon-transfers as Golden Read
+  - [x] Desktop ResearchFeed cards converted to collapsible accordion (chevron toggle, teal on expand)
+  - [x] /news/ page: two-column layout with "My Top Picks" golden reads sidebar
+  - [x] Golden reads sidebar: internal anchor links to correct pagination page + smooth scroll
+  - [x] Anchor IDs sanitised (slashes → dashes) via toAnchor() helper for valid HTML
+  - [x] Scroll offset set to 140px to clear sticky header on golden read navigation
+  - [x] Gold flash animation on targeted news card after sidebar navigation
+  - [x] Visit counter: Cloudflare Worker + KV — total + daily UK visits on homepage
+  - [x] audioUrl field added to reports schema; podcast player on report pages
+  - [x] YouTube Shorts URL fix in reports listing getYouTubeId regex
 
 ## External Integrations (managed outside Astro codebase)
 - **Google Analytics 4**: Injected via Cloudflare Zaraz at network level — do NOT add gtag.js or GA scripts to Astro files
 - **Cookie Consent Banner**: Managed by Cloudflare Zaraz automatically
 - **Email**: Cloudflare Email Routing → `contact@beyondparalysis.uk`
+- **Visit Counter**: Cloudflare Worker (`cloudflare-worker/visit-counter.js`) + KV namespace `VISIT_KV`
+  - Worker URL: deployed to Cloudflare Workers, bound to `beyondparalysis.uk/api/visit`
+  - KV keys: `total` (all-time), `daily_YYYY-MM-DD` (UK timezone, 48h TTL)
+  - CORS: `Access-Control-Allow-Origin: https://beyondparalysis.uk`
+  - **Gotcha**: KV binding must be set as **KV Namespace** type in Worker settings (Bindings tab), NOT as a Plaintext variable
 
 ## What's NOT Built Yet
 - News archive viewer (for articles older than 30 days)
